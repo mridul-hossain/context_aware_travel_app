@@ -1,0 +1,26 @@
+<TravelLayout>:
+    orientation: "vertical"
+    padding: 20
+    spacing: 15
+
+    Label:
+        id: location_label
+        text: "📍 Location: --"
+        font_size: 18
+
+    Label:
+        id: weather_label
+        text: "🌤 Weather: --"
+        font_size: 18
+
+    Label:
+        id: activity_label
+        text: "🎯 Suggested Activity: --"
+        font_size: 18
+
+    Button:
+        text: "Fetch Context"
+        font_size: 20
+        size_hint_y: None
+        height: 50
+        on_release: root.fetch_context()
