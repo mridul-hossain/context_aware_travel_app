@@ -1,26 +1,74 @@
-<TravelLayout>:
-    orientation: "vertical"
-    padding: 20
-    spacing: 15
+MDScreenManager:
+    LoginScreen:
+    DashboardScreen:
 
-    Label:
-        id: location_label
-        text: "📍 Location: --"
-        font_size: 18
+<LoginScreen>:
+    name: "login"
+    MDBoxLayout:
+        orientation: "vertical"
+        padding: dp(20)
+        spacing: dp(20)
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        adaptive_height: True
 
-    Label:
-        id: weather_label
-        text: "🌤 Weather: --"
-        font_size: 18
+        MDLabel:
+            text: "Welcome to Travel AI"
+            halign: "center"
+            font_style: "H4"
+        
+        MDRaisedButton:
+            text: "Sign in with Google"
+            pos_hint: {"center_x": 0.5}
+            md_bg_color: 1, 0, 0, 1  # Red for Google
+            on_release: root.do_login()
 
-    Label:
-        id: activity_label
-        text: "🎯 Suggested Activity: --"
-        font_size: 18
+        MDLabel:
+            id: status_label
+            text: ""
+            halign: "center"
+            theme_text_color: "Error"
 
-    Button:
-        text: "Fetch Context"
-        font_size: 20
-        size_hint_y: None
-        height: 50
-        on_release: root.fetch_context()
+<DashboardScreen>:
+    name: "dashboard"
+    MDBoxLayout:
+        orientation: "vertical"
+        padding: dp(20)
+        spacing: dp(20)
+
+        MDTopAppBar:
+            title: "Travel Companion"
+            right_action_items: [["logout", lambda x: app.logout()]]
+
+        MDLabel:
+            id: welcome_label
+            text: "Hello, User"
+            halign: "center"
+            font_style: "H5"
+
+        MDCard:
+            orientation: "vertical"
+            padding: dp(20)
+            spacing: dp(10)
+            size_hint: 1, None
+            height: "200dp"
+
+            MDLabel:
+                id: location_label
+                text: "Location: Unknown"
+            
+            MDLabel:
+                id: weather_label
+                text: "Weather: --"
+            
+            MDLabel:
+                id: activity_label
+                text: "Suggestion: --"
+                theme_text_color: "Primary"
+                bold: True
+
+        MDRaisedButton:
+            text: "Get Suggestion"
+            pos_hint: {"center_x": 0.5}
+            on_release: root.fetch_context()
+        
+        Widget: # Spacer

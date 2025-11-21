@@ -8,9 +8,11 @@ def create_tables():
     conn = sqlite3.connect(DB_PATH.as_posix())
     c = conn.cursor()
 
+    # Existing table
     c.execute('''
         CREATE TABLE IF NOT EXISTS user_context (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_email TEXT,  -- Added to link data to a user
             location TEXT,
             temperature REAL,
             recommended_activity TEXT,
@@ -18,9 +20,19 @@ def create_tables():
         )
     ''')
 
+    # New User table
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            email TEXT UNIQUE,
+            name TEXT,
+            profile_pic TEXT
+        )
+    ''')
+
     conn.commit()
     conn.close()
-    print(f"✅ Database initialized at {DB_PATH}")
+    print(f"Database initialized at {DB_PATH}")
 
 if __name__ == "__main__":
     create_tables()
