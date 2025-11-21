@@ -1,11 +1,16 @@
 from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.screenmanager import MDScreenManager
-from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.label import MDLabel
 from kivy.lang import Builder
 from kivy.core.window import Window
+from kivymd.uix.gridlayout import MDGridLayout
+from kivymd.uix.button import MDRectangleFlatButton, MDRaisedButton
+from kivymd.uix.scrollview import MDScrollView
+from kivy.metrics import dp
+from kivy.utils import get_color_from_hex
+from kivy.clock import Clock
 
 # Import your modules
 from context_module import get_location, get_weather
@@ -17,10 +22,10 @@ import threading
 
 DB_PATH = Path(__file__).parent / "database" / "travel_companion.db"
 
-
 class LoginScreen(MDScreen):
     def do_login(self):
         self.ids.status_label.text = "Waiting for browser login..."
+        self.ids.google_button.disabled = True
         # Run in a thread so UI doesn't freeze while browser is open
         threading.Thread(target=self._run_login_thread).start()
 
@@ -33,10 +38,17 @@ class LoginScreen(MDScreen):
             app.current_user_name = user_info['name']
             
             # Trigger screen switch
-            self.manager.current = "dashboard"
+            self.ids.status_label.text = ""
+            self.ids.google_button.disabled = False
             self.manager.get_screen("dashboard").ids.welcome_label.text = f"Hello, {user_info['given_name']}"
+            self.manager.current = "preference_selection"
         else:
             self.ids.status_label.text = "Login Failed. Try again."
+
+class PreferenceSelectionScreen(MDScreen):
+    def go_to_dashboard(self):
+        # Simply switch to the dashboard screen after the survey is 'complete'
+        self.manager.current = "dashboard"
 
 class DashboardScreen(MDScreen):
     def fetch_context(self):
@@ -69,6 +81,7 @@ class TravelApp(MDApp):
     current_user_name = None
 
     def build(self):
+        self.title = "Travel Companion"
         Window.size = (360, 640) # Mobile simulation
         self.theme_cls.primary_palette = "Blue"
         return Builder.load_file("travel.kv")
@@ -76,6 +89,7 @@ class TravelApp(MDApp):
     def logout(self):
         self.current_user_email = None
         self.root.current = "login"
+        self.is_loggin_in = False
 
 if __name__ == "__main__":
     TravelApp().run()

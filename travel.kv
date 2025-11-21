@@ -1,39 +1,219 @@
 MDScreenManager:
     LoginScreen:
     DashboardScreen:
+    PreferenceSelectionScreen:
 
 <LoginScreen>:
     name: "login"
+    MDFloatLayout:
+        # --- LAYER 1: The Background Image ---
+        FitImage:
+            source: "assets/background.jpg"  # Replace with a photo of people/travel
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+        # --- LAYER 2: The Blue Overlay ---
+        # This creates that blue tint over the photo
+        MDBoxLayout:
+            md_bg_color: 0.05, 0.2, 0.7, 0.85  # Deep Blue with 85% opacity
+            size_hint: 1, 1
+
+        # --- LAYER 3: The Content ---
+        MDBoxLayout:
+            orientation: "vertical"
+            padding: dp(30)
+            spacing: dp(20)
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+            # --- Top Spacer to push content down ---
+            Widget:
+                size_hint_y: 0.2
+
+            # --- Logo / App Name ---
+            MDLabel:
+                text: "Travel Companion"  # Or your Logo Image
+                halign: "center"
+                font_style: "H4"
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1  # White
+                bold: True
+            
+            MDLabel:
+                text: "Get started!"
+                halign: "center"
+                font_style: "H5"
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1  # White
+                bold: True
+                size_hint_y: None
+                height: self.texture_size[1]
+
+            MDLabel:
+                text: "Find your next adventure by connecting with the world."
+                halign: "center"
+                theme_text_color: "Custom"
+                text_color: 0.9, 0.9, 0.9, 1  # Off-white
+                font_size: "14sp"
+                size_hint_y: None
+                height: dp(60)
+
+            # --- Spacer ---
+            Widget:
+                size_hint_y: 0.1
+
+            MDLabel:
+                id: status_label
+                text: ""
+                halign: "center"
+                theme_text_color: "Custom"
+                text_color: 0.5, 0.0, 0.0, 1
+                font_size: "12sp"
+                bold: True
+                size_hint_y: None
+                height: dp(20)
+
+            # --- BUTTON 1: Google Login (Styled like the blue button) ---
+            MDFillRoundFlatIconButton:
+                id: google_button
+                text: "Continue with Google"
+                icon: "google"
+                pos_hint: {"center_x": 0.5}
+                size_hint_x: 1
+                height: dp(50)
+                md_bg_color: 1, 1, 1, 1      # White button
+                theme_text_color: "Custom"
+                text_color: 0, 0, 0, 1       # Black text
+                icon_color: 0, 0, 0, 1       # Black icon
+                on_release: root.do_login()  # Links to your Python code
+
+            # --- Bottom Spacer ---
+            Widget:
+                size_hint_y: 0.3
+
+<PreferenceSelectionScreen>:
+    name: "preference_selection"
     MDBoxLayout:
         orientation: "vertical"
         padding: dp(20)
         spacing: dp(20)
-        pos_hint: {"center_x": 0.5, "center_y": 0.5}
-        adaptive_height: True
+        md_bg_color: 1, 1, 1, 1  # White background
 
-        MDLabel:
-            text: "Welcome to Travel AI"
-            halign: "center"
-            font_style: "H4"
+        # --- Title and Subtitle Area ---
+        MDBoxLayout:
+            orientation: "vertical"
+            size_hint_y: None
+            height: dp(150)
+            spacing: dp(10)
+            padding: dp(10)
+            
+            Widget: # Spacer to push text down
+                size_hint_y: 0.1
+            
+            MDLabel:
+                text: "Which travel destinations do you like?"
+                halign: "center"
+                theme_text_color: "Primary"
+                bold: True
+
+            MDLabel:
+                text: "Choose as many as you like"
+                halign: "center"
+                font_style: "Caption"
+                theme_text_color: "Custom"
+                text_color: 0.4, 0.4, 0.4, 1 # Medium grey
         
-        MDRaisedButton:
-            text: "Sign in with Google"
-            pos_hint: {"center_x": 0.5}
-            md_bg_color: 1, 0, 0, 1  # Red for Google
-            on_release: root.do_login()
+        # --- Scrollable Grid for Options ---
+        MDScrollView:
+            MDGridLayout:
+                cols: 3  # Based on the image layout
+                spacing: dp(10)
+                padding: [0, 0, 0, dp(10)]
+                size_hint_y: None
+                height: self.minimum_height
 
-        MDLabel:
-            id: status_label
-            text: ""
-            halign: "center"
-            theme_text_color: "Error"
+                # Use MDRectangleFlatButton for square/flat look
+                # Theme colors are used to style the buttons when selected/unselected.
+
+                # Row 1
+                MDRectangleFlatButton:
+                    text: "Beach"
+                    font_size: "11sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                MDRectangleFlatButton:
+                    text: "Mountains"
+                    font_size: "11sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                MDRectangleFlatButton:
+                    text: "City Break"
+                    font_size: "11sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                
+                # Row 2
+                MDRectangleFlatButton:
+                    text: "Historical Sites"
+                    font_size: "11sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                MDRectangleFlatButton:
+                    text: "Nature & Wildlife"
+                    font_size: "11sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                MDRectangleFlatButton:
+                    text: "Food Tourism"
+                    font_size: "11sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                
+                # Row 3
+                MDRectangleFlatButton:
+                    text: "Adventure Travel"
+                    font_size: "11sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                MDRectangleFlatButton:
+                    text: "Luxury"
+                    font_size: "11sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                MDRectangleFlatButton:
+                    text: "Backpacking"
+                    font_size: "11sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                
+                # Row 4 (Example options)
+                MDRectangleFlatButton:
+                    text: "Cruise"
+                    font_size: "11sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                MDRectangleFlatButton:
+                    text: "Skiing"
+                    font_size: "11sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                MDRectangleFlatButton:
+                    text: "Volunteering"
+                    font_size: "11sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+
+
+        # --- Next Button (MDRaisedButton simulates the fill color) ---
+        MDRaisedButton:
+            text: "Next"
+            pos_hint: {"center_x": 0.5}
+            size_hint_x: 1
+            height: dp(50)
+            # The on_release action links to the method in SurveyScreen
+            on_release: root.go_to_dashboard()
 
 <DashboardScreen>:
     name: "dashboard"
+    # --- GHOST TOUCH BLOCKER ---
+    # This invisible button covers the whole screen.
+    # It catches clicks so they don't hit the Google button hidden underneath.
+    Button:
+        size_hint: 1, 1
+        background_color: 0, 0, 0, 0 
+        on_press: print("Blocked click on dashboard")
+    # ---------------------------
     MDBoxLayout:
         orientation: "vertical"
         padding: dp(20)
         spacing: dp(20)
+        md_bg_color: 1, 1, 1, 1
 
         MDTopAppBar:
             title: "Travel Companion"
@@ -41,7 +221,7 @@ MDScreenManager:
 
         MDLabel:
             id: welcome_label
-            text: "Hello, User"
+            text: ""
             halign: "center"
             font_style: "H5"
 
