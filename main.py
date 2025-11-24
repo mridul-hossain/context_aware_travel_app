@@ -41,11 +41,21 @@ class LoginScreen(MDScreen):
             self.ids.status_label.text = ""
             self.ids.google_button.disabled = False
             self.manager.get_screen("dashboard").ids.welcome_label.text = f"Hello, {user_info['given_name']}"
-            self.manager.current = "preference_selection"
+            self.manager.current = "attractions_selection"
         else:
             self.ids.status_label.text = "Login Failed. Try again."
 
-class PreferenceSelectionScreen(MDScreen):
+class AttractionsSelectionScreen(MDScreen):
+    def go_to_dashboard(self):
+        # Simply switch to the dashboard screen after the survey is 'complete'
+        self.manager.current = "activities_selection"
+
+class ActivitiesSelectionScreen(MDScreen):
+    def go_to_dashboard(self):
+        # Simply switch to the dashboard screen after the survey is 'complete'
+        self.manager.current = "cuisines_selection"
+
+class CuisinesSelectionScreen(MDScreen):
     def go_to_dashboard(self):
         # Simply switch to the dashboard screen after the survey is 'complete'
         self.manager.current = "dashboard"
