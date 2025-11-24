@@ -1,7 +1,9 @@
 MDScreenManager:
     LoginScreen:
     DashboardScreen:
-    PreferenceSelectionScreen:
+    CuisinesSelectionScreen:
+    ActivitiesSelectionScreen:
+    AttractionsSelectionScreen:
 
 <LoginScreen>:
     name: "login"
@@ -89,8 +91,8 @@ MDScreenManager:
             Widget:
                 size_hint_y: 0.3
 
-<PreferenceSelectionScreen>:
-    name: "preference_selection"
+<CuisinesSelectionScreen>:
+    name: "cuisines_selection"
     MDBoxLayout:
         orientation: "vertical"
         padding: dp(20)
@@ -104,6 +106,480 @@ MDScreenManager:
             height: dp(150)
             spacing: dp(10)
             padding: dp(10)
+
+            # --- Back Button, Dashes & Skip row ---
+            MDBoxLayout:
+                size_hint_y: None
+                height: dp(30)
+
+                # --- Back Button ---
+                MDIconButton:
+                    icon: "chevron-left" # A better icon for "back" than just '<'
+                    pos_hint: {"left": 1, "center_y": 0.5} # Position on the far left
+                    theme_icon_color: "Custom"
+                    icon_color: 0, 0, 0, 1 # Black icon
+                    md_bg_color: 0.95, 0.95, 0.95, 1 # Light gray background for the circle
+                    # Force a rounded background circle (size must match radius)
+                    size_hint: None, None
+                    size: dp(30), dp(30)
+                    line_color: 0, 0, 0, 0 # Remove border line
+                    on_release: root.manager.current = "login" # Action: Go back to login
+
+                Widget: #space to push right
+                    size_hint_x: 0.5
+
+                # --- The 3 Dashes Container ---
+                MDBoxLayout:
+                    spacing: dp(10)
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        
+                    # DASH 1 (Active Style - Colorful)
+                    MDCard:
+                        size_hint: None, None
+                        size: dp(20), dp(6)  # Width 20, Height 6
+                        radius: [3,]         # Rounded corners (half of height)
+                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                        md_bg_color: 0.9, 0.9, 0.9, 1 # Light Grey
+                        elevation: 0
+
+                    # DASH 2 (Inactive Style - Grey)
+                    MDCard:
+                        size_hint: None, None
+                        size: dp(20), dp(6)
+                        radius: [3,]
+                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                        md_bg_color: 0.9, 0.9, 0.9, 1 # Light Grey
+                        elevation: 0
+
+                    # DASH 3 (Inactive Style - Grey)
+                    MDCard:
+                        size_hint: None, None
+                        size: dp(20), dp(6)
+                        radius: [3,]
+                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                        md_bg_color: app.theme_cls.primary_color
+                        elevation: 0
+
+                # --- Skip Button ---
+                MDFlatButton:
+                    text: "Skip"
+                    pos_hint: {"center_y": 0.5, "right": 1}
+                    size_hint: None, None # Fixed width
+                    width: dp(60) 
+                    theme_text_color: "Hint" # Use a lighter color for skip
+                    font_size: "14sp"
+                    bold: True
+                    # Action: Skip the survey and go to the dashboard
+                    on_release: root.go_to_dashboard()
+            
+            Widget: # Spacer to push text down
+                size_hint_y: 0.1
+
+            MDLabel:
+                text: "Complete your account"
+                halign: "center"
+                font_style: "Caption"
+                theme_text_color: "Custom"
+                text_color: 0.4, 0.4, 0.4, 1 # Medium grey
+                bold: True
+            
+            Widget: # Spacer to push text down
+                size_hint_y: 0.1
+            
+            MDLabel:
+                text: "What kind of foods do you enjoy?"
+                halign: "center"
+                theme_text_color: "Primary"
+                bold: True
+
+            MDLabel:
+                text: "Choose as many as you like"
+                halign: "center"
+                font_style: "Caption"
+                theme_text_color: "Custom"
+                text_color: 0.4, 0.4, 0.4, 1 # Medium grey
+        
+        # --- Scrollable Grid for Options ---
+        MDScrollView:
+            do_scroll_x: True
+            do_scroll_y: True
+
+            MDGridLayout:
+                cols: 3  # Based on the image layout
+                spacing: dp(10)
+                padding: dp(10)
+                adaptive_size: True
+                height: self.minimum_height
+
+                # Use MDRectangleFlatButton for square/flat look
+                # Theme colors are used to style the buttons when selected/unselected.
+
+                # Row 1
+                MDRectangleFlatButton:
+                    text: "Indian"
+                    font_size: "14sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                MDRectangleFlatButton:
+                    text: "Chinese"
+                    font_size: "14sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                MDRectangleFlatButton:
+                    text: "Japanese"
+                    font_size: "14sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                
+                # Row 2
+                MDRectangleFlatButton:
+                    text: "Korean"
+                    font_size: "14sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                MDRectangleFlatButton:
+                    text: "Thai"
+                    font_size: "14sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                MDRectangleFlatButton:
+                    text: "Italian"
+                    font_size: "14sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                
+                # Row 3
+                MDRectangleFlatButton:
+                    text: "French"
+                    font_size: "14sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                MDRectangleFlatButton:
+                    text: "Mexican"
+                    font_size: "14sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                MDRectangleFlatButton:
+                    text: "Middle Eastern"
+                    font_size: "14sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                
+                # Row 4 (Example options)
+                MDRectangleFlatButton:
+                    text: "Vietnamese"
+                    font_size: "14sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                MDRectangleFlatButton:
+                    text: "American"
+                    font_size: "14sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                MDRectangleFlatButton:
+                    text: "Local / Traditional"
+                    font_size: "14sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+
+                # Row 5 (Example options)
+                MDRectangleFlatButton:
+                    text: "African"
+                    font_size: "14sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+
+
+        # --- Next Button (MDRaisedButton simulates the fill color) ---
+        MDRaisedButton:
+            text: "Next"
+            pos_hint: {"center_x": 0.5}
+            size_hint_x: 1
+            height: dp(50)
+            # The on_release action links to the method in SurveyScreen
+            on_release: root.go_to_dashboard()
+
+<ActivitiesSelectionScreen>:
+    name: "activities_selection"
+    MDBoxLayout:
+        orientation: "vertical"
+        padding: dp(20)
+        spacing: dp(20)
+        md_bg_color: 1, 1, 1, 1  # White background
+
+        # --- Title and Subtitle Area ---
+        MDBoxLayout:
+            orientation: "vertical"
+            size_hint_y: None
+            height: dp(150)
+            spacing: dp(10)
+            padding: dp(10)
+
+            # --- Back Button, Dashes & Skip row ---
+            MDBoxLayout:
+                size_hint_y: None
+                height: dp(30)
+
+                # --- Back Button ---
+                MDIconButton:
+                    icon: "chevron-left" # A better icon for "back" than just '<'
+                    pos_hint: {"left": 1, "center_y": 0.5} # Position on the far left
+                    theme_icon_color: "Custom"
+                    icon_color: 0, 0, 0, 1 # Black icon
+                    md_bg_color: 0.95, 0.95, 0.95, 1 # Light gray background for the circle
+                    # Force a rounded background circle (size must match radius)
+                    size_hint: None, None
+                    size: dp(30), dp(30)
+                    line_color: 0, 0, 0, 0 # Remove border line
+                    on_release: root.manager.current = "login" # Action: Go back to login
+
+                Widget: #space to push right
+                    size_hint_x: 0.5
+
+                # --- The 3 Dashes Container ---
+                MDBoxLayout:
+                    spacing: dp(10)
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        
+                    # DASH 1 (Active Style - Colorful)
+                    MDCard:
+                        size_hint: None, None
+                        size: dp(20), dp(6)  # Width 20, Height 6
+                        radius: [3,]         # Rounded corners (half of height)
+                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                        md_bg_color: 0.9, 0.9, 0.9, 1 # Light Grey
+                        elevation: 0
+
+                    # DASH 2 (Inactive Style - Grey)
+                    MDCard:
+                        size_hint: None, None
+                        size: dp(20), dp(6)
+                        radius: [3,]
+                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                        md_bg_color: app.theme_cls.primary_color
+                        elevation: 0
+
+                    # DASH 3 (Inactive Style - Grey)
+                    MDCard:
+                        size_hint: None, None
+                        size: dp(20), dp(6)
+                        radius: [3,]
+                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                        md_bg_color: 0.9, 0.9, 0.9, 1 # Light Grey
+                        elevation: 0
+
+                # --- Skip Button ---
+                MDFlatButton:
+                    text: "Skip"
+                    pos_hint: {"center_y": 0.5, "right": 1}
+                    size_hint: None, None # Fixed width
+                    width: dp(60) 
+                    theme_text_color: "Hint" # Use a lighter color for skip
+                    font_size: "14sp"
+                    bold: True
+                    # Action: Skip the survey and go to the dashboard
+                    on_release: root.go_to_dashboard()
+            
+            Widget: # Spacer to push text down
+                size_hint_y: 0.1
+
+            MDLabel:
+                text: "Complete your account"
+                halign: "center"
+                font_style: "Caption"
+                theme_text_color: "Custom"
+                text_color: 0.4, 0.4, 0.4, 1 # Medium grey
+                bold: True
+            
+            Widget: # Spacer to push text down
+                size_hint_y: 0.1
+            
+            MDLabel:
+                text: "What kind of activities do you like?"
+                halign: "center"
+                theme_text_color: "Primary"
+                bold: True
+
+            MDLabel:
+                text: "Choose as many as you like"
+                halign: "center"
+                font_style: "Caption"
+                theme_text_color: "Custom"
+                text_color: 0.4, 0.4, 0.4, 1 # Medium grey
+        
+        # --- Scrollable Grid for Options ---
+        MDScrollView:
+            do_scroll_x: True
+            do_scroll_y: True
+
+            MDGridLayout:
+                cols: 3  # Based on the image layout
+                spacing: dp(10)
+                padding: dp(10)
+                adaptive_size: True
+                height: self.minimum_height
+
+                # Use MDRectangleFlatButton for square/flat look
+                # Theme colors are used to style the buttons when selected/unselected.
+
+                # Row 1
+                MDRectangleFlatButton:
+                    text: "Hiking"
+                    font_size: "14sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                MDRectangleFlatButton:
+                    text: "Cycling"
+                    font_size: "14sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                MDRectangleFlatButton:
+                    text: "Kayaking"
+                    font_size: "14sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                
+                # Row 2
+                MDRectangleFlatButton:
+                    text: "Boating"
+                    font_size: "14sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                MDRectangleFlatButton:
+                    text: "Camping"
+                    font_size: "14sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                MDRectangleFlatButton:
+                    text: "Fishing"
+                    font_size: "14sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                
+                # Row 3
+                MDRectangleFlatButton:
+                    text: "Yoga"
+                    font_size: "14sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                MDRectangleFlatButton:
+                    text: "Ziplining"
+                    font_size: "14sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                MDRectangleFlatButton:
+                    text: "Gym Workout"
+                    font_size: "14sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                
+                # Row 4 (Example options)
+                MDRectangleFlatButton:
+                    text: "Swimming"
+                    font_size: "14sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                MDRectangleFlatButton:
+                    text: "Bowling"
+                    font_size: "14sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                MDRectangleFlatButton:
+                    text: "Escape Rooms"
+                    font_size: "14sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+
+                # Row 5 (Example options)
+                MDRectangleFlatButton:
+                    text: "VR Gaming"
+                    font_size: "14sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                MDRectangleFlatButton:
+                    text: "Spa & Wellness"
+                    font_size: "14sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                MDRectangleFlatButton:
+                    text: "Skiing / Snowboarding"
+                    font_size: "14sp"
+                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+
+
+        # --- Next Button (MDRaisedButton simulates the fill color) ---
+        MDRaisedButton:
+            text: "Next"
+            pos_hint: {"center_x": 0.5}
+            size_hint_x: 1
+            height: dp(50)
+            # The on_release action links to the method in SurveyScreen
+            on_release: root.go_to_dashboard()
+
+<AttractionsSelectionScreen>:
+    name: "attractions_selection"
+    MDBoxLayout:
+        orientation: "vertical"
+        padding: dp(20)
+        spacing: dp(20)
+        md_bg_color: 1, 1, 1, 1  # White background
+
+        # --- Title and Subtitle Area ---
+        MDBoxLayout:
+            orientation: "vertical"
+            size_hint_y: None
+            height: dp(150)
+            spacing: dp(10)
+            padding: dp(10)
+
+            # --- Back Button, Dashes & Skip row ---
+            MDBoxLayout:
+                size_hint_y: None
+                height: dp(30)
+
+                # --- Back Button ---
+                MDIconButton:
+                    icon: "chevron-left" # A better icon for "back" than just '<'
+                    pos_hint: {"left": 1, "center_y": 0.5} # Position on the far left
+                    theme_icon_color: "Custom"
+                    icon_color: 0, 0, 0, 1 # Black icon
+                    md_bg_color: 0.95, 0.95, 0.95, 1 # Light gray background for the circle
+                    # Force a rounded background circle (size must match radius)
+                    size_hint: None, None
+                    size: dp(30), dp(30)
+                    line_color: 0, 0, 0, 0 # Remove border line
+                    on_release: root.manager.current = "login" # Action: Go back to login
+
+                Widget: #space to push right
+                    size_hint_x: 0.5
+
+                # --- The 3 Dashes Container ---
+                MDBoxLayout:
+                    spacing: dp(10)
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        
+                    # DASH 1 (Active Style - Colorful)
+                    MDCard:
+                        size_hint: None, None
+                        size: dp(20), dp(6)  # Width 20, Height 6
+                        radius: [3,]         # Rounded corners (half of height)
+                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                        md_bg_color: app.theme_cls.primary_color
+                        elevation: 0
+
+                    # DASH 2 (Inactive Style - Grey)
+                    MDCard:
+                        size_hint: None, None
+                        size: dp(20), dp(6)
+                        radius: [3,]
+                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                        md_bg_color: 0.9, 0.9, 0.9, 1 # Light Grey
+                        elevation: 0
+
+                    # DASH 3 (Inactive Style - Grey)
+                    MDCard:
+                        size_hint: None, None
+                        size: dp(20), dp(6)
+                        radius: [3,]
+                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                        md_bg_color: 0.9, 0.9, 0.9, 1 # Light Grey
+                        elevation: 0
+
+                # --- Skip Button ---
+                MDFlatButton:
+                    text: "Skip"
+                    pos_hint: {"center_y": 0.5, "right": 1}
+                    size_hint: None, None # Fixed width
+                    width: dp(60) 
+                    theme_text_color: "Hint" # Use a lighter color for skip
+                    font_size: "14sp"
+                    bold: True
+                    # Action: Skip the survey and go to the dashboard
+                    on_release: root.go_to_dashboard()
+            
+            Widget: # Spacer to push text down
+                size_hint_y: 0.1
+
+            MDLabel:
+                text: "Complete your account"
+                halign: "center"
+                font_style: "Caption"
+                theme_text_color: "Custom"
+                text_color: 0.4, 0.4, 0.4, 1 # Medium grey
+                bold: True
             
             Widget: # Spacer to push text down
                 size_hint_y: 0.1
@@ -123,11 +599,14 @@ MDScreenManager:
         
         # --- Scrollable Grid for Options ---
         MDScrollView:
+            do_scroll_x: True
+            do_scroll_y: True
+
             MDGridLayout:
                 cols: 3  # Based on the image layout
                 spacing: dp(10)
-                padding: [0, 0, 0, dp(10)]
-                size_hint_y: None
+                padding: dp(10)
+                adaptive_size: True
                 height: self.minimum_height
 
                 # Use MDRectangleFlatButton for square/flat look
@@ -136,57 +615,43 @@ MDScreenManager:
                 # Row 1
                 MDRectangleFlatButton:
                     text: "Beach"
-                    font_size: "11sp"
+                    font_size: "14sp"
                     on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
                 MDRectangleFlatButton:
-                    text: "Mountains"
-                    font_size: "11sp"
+                    text: "Mountain"
+                    font_size: "14sp"
                     on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
                 MDRectangleFlatButton:
-                    text: "City Break"
-                    font_size: "11sp"
+                    text: "Museum"
+                    font_size: "14sp"
                     on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
                 
                 # Row 2
                 MDRectangleFlatButton:
-                    text: "Historical Sites"
-                    font_size: "11sp"
+                    text: "Art Gallery"
+                    font_size: "14sp"
                     on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
                 MDRectangleFlatButton:
-                    text: "Nature & Wildlife"
-                    font_size: "11sp"
+                    text: "Waterfall"
+                    font_size: "14sp"
                     on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
                 MDRectangleFlatButton:
-                    text: "Food Tourism"
-                    font_size: "11sp"
+                    text: "Park"
+                    font_size: "14sp"
                     on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
                 
                 # Row 3
                 MDRectangleFlatButton:
-                    text: "Adventure Travel"
-                    font_size: "11sp"
+                    text: "Lake"
+                    font_size: "14sp"
                     on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
                 MDRectangleFlatButton:
-                    text: "Luxury"
-                    font_size: "11sp"
+                    text: "Riverside"
+                    font_size: "14sp"
                     on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
                 MDRectangleFlatButton:
-                    text: "Backpacking"
-                    font_size: "11sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
-                
-                # Row 4 (Example options)
-                MDRectangleFlatButton:
-                    text: "Cruise"
-                    font_size: "11sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
-                MDRectangleFlatButton:
-                    text: "Skiing"
-                    font_size: "11sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
-                MDRectangleFlatButton:
-                    text: "Volunteering"
-                    font_size: "11sp"
+                    text: "Historical Monument"
+                    font_size: "14sp"
                     on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
 
 
