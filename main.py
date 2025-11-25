@@ -12,9 +12,11 @@ from kivy.metrics import dp
 from kivy.utils import get_color_from_hex
 from kivy.clock import Clock
 from kivy.clock import mainthread
+from kivymd.uix.card import MDCard
+from kivy.properties import StringProperty
 
 # Import your modules
-from context_module import get_location, get_weather
+from context_module import get_location, get_weather, get_google_places
 from ontology_module import load_ontology, suggest_activity
 from auth_module import google_login_flow
 import sqlite3
@@ -110,6 +112,11 @@ class CuisinesSelectionScreen(MDScreen):
         # Simply switch to the dashboard screen after the survey is 'complete'
         self.manager.current = "dashboard"
 
+class TravelLocationCard(MDCard):
+    source = StringProperty()
+    text = StringProperty()
+    sub_text = StringProperty()
+
 class DashboardScreen(MDScreen):
     def fetch_context(self):
         # 1. Get Data
@@ -136,6 +143,54 @@ class DashboardScreen(MDScreen):
         conn.commit()
         conn.close()
 
+    def on_enter(self):
+        # Trigger data loading when screen is shown
+        self.load_data()
+
+    def load_data(self):
+        # Run in thread to prevent UI freeze
+        threading.Thread(target=self._fetch_all_data).start()
+
+    def _fetch_all_data(self):
+        # A. Context Data
+        lat, lon, address = get_location()
+        temp, condition = get_weather(lat, lon)
+        ontology = load_ontology()
+        recommended = suggest_activity(temp, ontology)
+        
+        # B. Places Data (Restaurants & Attractions)
+        restaurants = get_google_places(lat, lon, "restaurant")
+        attractions = get_google_places(lat, lon, "tourist_attraction")
+
+        # Update UI on Main Thread
+        Clock.schedule_once(lambda dt: self.update_ui(
+            address, temp, condition, recommended, restaurants, attractions
+        ))
+
+    def update_ui(self, address, temp, condition, recommended, restaurants, attractions):
+        
+        # Clear existing lists to avoid duplicates
+        self.ids.restaurant_list.clear_widgets()
+        self.ids.attraction_list.clear_widgets()
+
+        # Populate Restaurants
+        for place in restaurants:
+            card = TravelLocationCard(
+                source=place['image'],
+                text=place['name'],
+                sub_text=f"{place['rating']} Stars"
+            )
+            self.ids.restaurant_list.add_widget(card)
+
+        # Populate Attractions
+        for place in attractions:
+            card = TravelLocationCard(
+                source=place['image'],
+                text=place['name'],
+                sub_text=f"{place['rating']} Stars"
+            )
+            self.ids.attraction_list.add_widget(card)
+
 class TravelApp(MDApp):
     current_user_email = None
     current_user_name = None
@@ -144,7 +199,7 @@ class TravelApp(MDApp):
         self.title = "Travel Companion"
         Window.size = (360, 640) # Mobile simulation
         self.theme_cls.primary_palette = "Blue"
-        return Builder.load_file("travel.kv")
+        return Builder.load_file("app_layout.kv")
 
     def logout(self):
         self.current_user_email = None

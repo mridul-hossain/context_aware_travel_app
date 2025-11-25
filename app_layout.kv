@@ -651,6 +651,53 @@ MDScreenManager:
             # The on_release action links to the method in SurveyScreen
             on_release: root.go_to_dashboard()
 
+<TravelLocationCard>:
+    orientation: "vertical"
+    size_hint: None, None
+    size: "200dp", "180dp"
+    radius: [15]
+    ripple_behavior: True
+    md_bg_color: 1, 1, 1, 1
+    elevation: 2
+
+    FitImage:
+        id: place_image
+        source: root.source
+        size_hint_y: .65
+        radius: [15, 15, 0, 0]
+
+    MDBoxLayout:
+        orientation: "vertical"
+        padding: "8dp"
+        size_hint_y: .35
+
+        MDLabel:
+            id: place_name
+            text: root.text
+            bold: True
+            theme_text_color: "Primary"
+            font_style: "Subtitle1"
+            shorten: True
+            shorten_from: 'right'
+
+        MDBoxLayout:
+            orientation: "horizontal"
+            adaptive_height: True
+            
+            MDIcon:
+                icon: "star"
+                theme_text_color: "Custom"
+                text_color: 1, 0.7, 0, 1  # Gold color
+                font_size: "16sp"
+                size_hint_x: None
+                width: "20dp"
+            
+            MDLabel:
+                id: place_rating
+                text: root.sub_text
+                theme_text_color: "Secondary"
+                font_style: "Caption"
+
 <DashboardScreen>:
     name: "dashboard"
     MDBoxLayout:
@@ -794,6 +841,44 @@ MDScreenManager:
                 padding: dp(20)
                 spacing: dp(20)
 
+                # --- Section 1: Restaurants ---
                 MDLabel:
-                    text: "Your Dashboard Content Goes Here"
-                    halign: "center"
+                    text: "Nearby Restaurants"
+                    font_style: "H6"
+                    bold: True
+                    adaptive_height: True
+
+                MDScrollView:
+                    size_hint_y: None
+                    height: "190dp"
+                    do_scroll_x: True
+                    do_scroll_y: False
+                    bar_width: 0
+
+                    MDBoxLayout:
+                        id: restaurant_list
+                        orientation: 'horizontal'
+                        adaptive_width: True
+                        spacing: "15dp"
+                        padding: [0, 0, 0, 10]
+
+                # --- Section 2: Attractions ---
+                MDLabel:
+                    text: "Places to Visit"
+                    font_style: "H6"
+                    bold: True
+                    adaptive_height: True
+
+                MDScrollView:
+                    size_hint_y: None
+                    height: "190dp"
+                    do_scroll_x: True
+                    do_scroll_y: False
+                    bar_width: 0
+
+                    MDBoxLayout:
+                        id: attraction_list
+                        orientation: 'horizontal'
+                        adaptive_width: True
+                        spacing: "15dp"
+                        padding: [0, 0, 0, 10]
