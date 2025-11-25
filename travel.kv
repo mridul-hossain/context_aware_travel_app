@@ -510,21 +510,8 @@ MDScreenManager:
                 size_hint_y: None
                 height: dp(30)
 
-                # --- Back Button ---
-                MDIconButton:
-                    icon: "chevron-left" # A better icon for "back" than just '<'
-                    pos_hint: {"left": 1, "center_y": 0.5} # Position on the far left
-                    theme_icon_color: "Custom"
-                    icon_color: 0, 0, 0, 1 # Black icon
-                    md_bg_color: 0.95, 0.95, 0.95, 1 # Light gray background for the circle
-                    # Force a rounded background circle (size must match radius)
-                    size_hint: None, None
-                    size: dp(30), dp(30)
-                    line_color: 0, 0, 0, 0 # Remove border line
-                    on_release: root.manager.current = "login" # Action: Go back to login
-
                 Widget: #space to push right
-                    size_hint_x: 0.5
+                    size_hint_x: 0.85
 
                 # --- The 3 Dashes Container ---
                 MDBoxLayout:
@@ -666,54 +653,147 @@ MDScreenManager:
 
 <DashboardScreen>:
     name: "dashboard"
-    # --- GHOST TOUCH BLOCKER ---
-    # This invisible button covers the whole screen.
-    # It catches clicks so they don't hit the Google button hidden underneath.
-    Button:
-        size_hint: 1, 1
-        background_color: 0, 0, 0, 0 
-        on_press: print("Blocked click on dashboard")
-    # ---------------------------
     MDBoxLayout:
         orientation: "vertical"
-        padding: dp(20)
-        spacing: dp(20)
-        md_bg_color: 1, 1, 1, 1
+        md_bg_color: 1, 1, 1, 1 # White background
 
-        MDTopAppBar:
-            title: "Travel Companion"
-            right_action_items: [["logout", lambda x: app.logout()]]
-
-        MDLabel:
-            id: welcome_label
-            text: ""
-            halign: "center"
-            font_style: "H5"
-
-        MDCard:
-            orientation: "vertical"
-            padding: dp(20)
+        # --- HEADER ---
+        MDBoxLayout:
+            size_hint_y: None
+            height: dp(80)
+            padding: [dp(20), dp(10), dp(20), dp(10)] # Left, Top, Right, Bottom
             spacing: dp(10)
-            size_hint: 1, None
-            height: "200dp"
+            md_bg_color: 1, 1, 1, 1
+            elevation: 0 
 
-            MDLabel:
-                id: location_label
-                text: "Location: Unknown"
-            
-            MDLabel:
-                id: weather_label
-                text: "Weather: --"
-            
-            MDLabel:
-                id: activity_label
-                text: "Suggestion: --"
-                theme_text_color: "Primary"
-                bold: True
+            # --- Avatar ---
+            MDCard:
+                size_hint: None, None
+                size: dp(50), dp(50)
+                radius: [25, ] # Make it a perfect circle (half of size)
+                elevation: 0
+                pos_hint: {"center_y": 0.5}
+                
+                # FitImage handles circular cropping better than Image
+                FitImage:
+                    id: profile_image
+                    source: 'assets/user_avatar.png' 
+                    radius: [25, ] 
 
-        MDRaisedButton:
-            text: "Get Suggestion"
-            pos_hint: {"center_x": 0.5}
-            on_release: root.fetch_context()
-        
-        Widget: # Spacer
+            # --- Greeting Text ---
+            MDBoxLayout:
+                orientation: "vertical"
+                adaptive_height: True
+                adaptive_width: True
+                pos_hint: {"center_y": 0.5}
+
+                MDLabel:
+                    text: "Welcome back,"
+                    font_style: "Caption"
+                    theme_text_color: "Secondary"
+                    adaptive_height: True
+                    adaptive_width: True
+
+                MDLabel:
+                    id: user_name
+                    text: "" # Placeholder text
+                    bold: True
+                    font_size: "16sp"
+                    size_hint_x: 1
+                    theme_text_color: "Primary"
+                    adaptive_height: True
+                    adaptive_width: True
+
+            # This pushes the buttons to the far right
+            Widget:
+                size_hint_x: 1
+
+            # -- Notification Button ---
+            MDIconButton:
+                icon: "bell"
+                pos_hint: {"right": 1, "center_y": 0.5}
+                theme_icon_color: "Custom"
+                icon_color: 0, 0, 0, 1 # Black icon
+                md_bg_color: 0.95, 0.95, 0.95, 1 # Light gray background for the circle
+                # Force a rounded background circle (size must match radius)
+                size_hint: None, None
+                size: dp(20), dp(20)
+                user_font_size: "12sp"
+                line_color: 0, 0, 0, 0 # Remove border line
+                on_release: print("user pressed settings button")
+
+            # --- Settings Button ---
+            MDIconButton:
+                icon: "cog"
+                pos_hint: {"right": 1, "center_y": 0.5}
+                theme_icon_color: "Custom"
+                icon_color: 0, 0, 0, 1 # Black icon
+                md_bg_color: 0.95, 0.95, 0.95, 1 # Light gray background for the circle
+                # Force a rounded background circle (size must match radius)
+                size_hint: None, None
+                size: dp(20), dp(20)
+                line_color: 0, 0, 0, 0 # Remove border line
+                on_release: print("user pressed settings button")
+
+        # --- Weather Card ---
+        MDBoxLayout:
+            size_hint_y: None
+            height: dp(120) # Slightly taller for better spacing
+            padding: [dp(20), 0, dp(20), 0]
+
+            MDCard:
+                size_hint: 1, 1
+                radius: [dp(10), ]
+                elevation: 0
+                md_bg_color: 0.9, 0.9, 0.9, 1
+                line_color: 0, 0, 0, 0.05
+                padding: dp(25)
+
+                MDFloatLayout:
+                    size_hint_y: None
+
+                    # --- LEFT SIDE: Text ---
+                    MDBoxLayout:
+                        orientation: "vertical"
+                        adaptive_size: True
+                        pos_hint: {"center_y": 0.5, "x": 0}
+                        spacing: dp(0)
+
+                        MDLabel:
+                            id: weather_temp_label
+                            text: "--°C" 
+                            font_style: "H2"       # Bigger, thinner modern font
+                            bold: True
+                            theme_text_color: "Custom"
+                            text_color: 0.15, 0.15, 0.15, 1 
+                            adaptive_size: True
+
+                        MDLabel:
+                            id: weather_loc_label
+                            text: "Location" 
+                            font_style: "Subtitle1"
+                            theme_text_color: "Custom"
+                            text_color: 0.5, 0.5, 0.5, 1
+                            adaptive_size: True
+
+                    # --- RIGHT SIDE: Icon ---
+                    MDIcon:
+                        id: weather_icon
+                        icon: "weather-partly-cloudy"
+                        pos_hint: {"center_y": 0.5, "x": 0.8} 
+                        theme_text_color: "Custom"
+                        text_color: 0.6, 0.6, 0.6, 1
+                        font_size: "64sp"
+
+        # --- REST OF CONTENT ---
+        MDScrollView:
+            MDBoxLayout:
+                orientation: "vertical"
+                size_hint_y: None
+                height: self.minimum_height
+                padding: dp(20)
+                spacing: dp(20)
+
+                MDLabel:
+                    text: "Your Dashboard Content Goes Here"
+                    halign: "center"

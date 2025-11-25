@@ -3,7 +3,7 @@ from geopy.geocoders import Nominatim
 
 def get_location():
     geolocator = Nominatim(user_agent="travel_app")
-    location = geolocator.geocode("Montreal")  # Static for now
+    location = geolocator.geocode("Mexico")  # Static for now
     return (location.latitude, location.longitude, location.address)
 
 def get_weather(lat, lon):

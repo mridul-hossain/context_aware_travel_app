@@ -11,6 +11,7 @@ from kivymd.uix.scrollview import MDScrollView
 from kivy.metrics import dp
 from kivy.utils import get_color_from_hex
 from kivy.clock import Clock
+from kivy.clock import mainthread
 
 # Import your modules
 from context_module import get_location, get_weather
@@ -38,12 +39,61 @@ class LoginScreen(MDScreen):
             app.current_user_name = user_info['name']
             
             # Trigger screen switch
-            self.ids.status_label.text = ""
-            self.ids.google_button.disabled = False
-            self.manager.get_screen("dashboard").ids.welcome_label.text = f"Hello, {user_info['given_name']}"
-            self.manager.current = "attractions_selection"
+            self.on_login_success(user_info)
         else:
             self.ids.status_label.text = "Login Failed. Try again."
+
+    def get_icon_map(self, condition):
+        condition = condition.lower()
+        # Format: (Icon Name, Color Tuple RGBA)
+        if "clear" in condition:
+            return "weather-sunny", (1, 0.8, 0.3, 1) # Yellow/Orange
+        elif "few clouds" in condition:
+            return "weather-partly-cloudy", (1, 0.8, 0.3, 1)
+        elif "scattered clouds" in condition or "broken clouds" in condition:
+            return "weather-cloudy", (0.6, 0.6, 0.6, 1) # Grey
+        elif "shower rain" in condition or "rain" in condition:
+            return "weather-rainy", (0.3, 0.3, 0.5, 1) # Blue-grey
+        elif "thunderstorm" in condition:
+            return "weather-lightning", (0.2, 0.2, 0.4, 1) # Dark blue
+        elif "snow" in condition:
+            return "weather-snowy", (0.8, 0.9, 1, 1) # Light blue/white
+        elif "mist" in condition or "fog" in condition:
+            return "weather-fog", (0.7, 0.7, 0.7, 1) # Light grey
+        else:
+            # Default backup
+            return "weather-cloudy", (0.6, 0.6, 0.6, 1)
+
+    @mainthread
+    def on_login_success(self, user_info):
+        # This runs on the MAIN UI THREAD (Safe for UI updates, Ex: Picture)
+        dashboard = self.manager.get_screen("dashboard")
+
+        dashboard.ids.user_name.text = user_info['name']
+        dashboard.ids.profile_image.source = user_info['picture']
+        
+        # Configuring login button based on successful login attempt 
+        self.ids.status_label.text = ""
+        self.ids.google_button.disabled = False
+
+        # Location and Weather Information
+        lat, lon, address = get_location()
+        temp, condition = get_weather(lat, lon)
+
+        # Update labels
+        dashboard.ids.weather_temp_label.text = f"{int(round(temp))}°C"
+        # Shorten address to just city if possible, roughly
+        city_name = address.split(",")[0] if "," in address else address
+        dashboard.ids.weather_loc_label.text = city_name
+
+        # Determine icon and color based on condition
+        icon_name, icon_color = self.get_icon_map(condition)
+
+        # Update icon widget
+        dashboard.ids.weather_icon.icon = icon_name
+        dashboard.ids.weather_icon.text_color = icon_color
+
+        self.manager.current = "attractions_selection"
 
 class AttractionsSelectionScreen(MDScreen):
     def go_to_dashboard(self):
