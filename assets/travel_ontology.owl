@@ -1,53 +1,745 @@
 <?xml version="1.0"?>
 
 
-<!DOCTYPE Ontology [
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
     <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
-    <!ENTITY xml "http://www.w3.org/XML/1998/namespace" >
     <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
     <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY untitled-ontology-7 "http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#" >
 ]>
 
 
-<Ontology xmlns="http://www.w3.org/2002/07/owl#"
-     xml:base="http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-3"
+<rdf:RDF xmlns="http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#"
+     xml:base="http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-     xmlns:xml="http://www.w3.org/XML/1998/namespace"
-     ontologyIRI="http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-3">
-    <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
-    <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
-    <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
-    <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
-    <Declaration>
-        <Class IRI="#Activity"/>
-    </Declaration>
-    <Declaration>
-        <Class IRI="#Destination"/>
-    </Declaration>
-    <Declaration>
-        <Class IRI="#UserPreference"/>
-    </Declaration>
-    <Declaration>
-        <Class IRI="#Weather"/>
-    </Declaration>
-    <Declaration>
-        <ObjectProperty IRI="#hasActivity"/>
-    </Declaration>
-    <Declaration>
-        <ObjectProperty IRI="#hasWeather"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty IRI="#locationName"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty IRI="#preferredActivity"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty IRI="#temperature"/>
-    </Declaration>
-</Ontology>
+     xmlns:untitled-ontology-7="http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#is_good_for_time -->
+
+    <owl:ObjectProperty rdf:about="&untitled-ontology-7;is_good_for_time">
+        <rdfs:domain rdf:resource="&untitled-ontology-7;Place"/>
+        <rdfs:range rdf:resource="&untitled-ontology-7;TimeOfDay"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#is_good_for_weather -->
+
+    <owl:ObjectProperty rdf:about="&untitled-ontology-7;is_good_for_weather">
+        <rdfs:domain rdf:resource="&untitled-ontology-7;Place"/>
+        <rdfs:range rdf:resource="&untitled-ontology-7;Weather"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#has_category -->
+
+    <owl:DatatypeProperty rdf:about="&untitled-ontology-7;has_category">
+        <rdfs:domain rdf:resource="&untitled-ontology-7;Place"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#has_keyword -->
+
+    <owl:DatatypeProperty rdf:about="&untitled-ontology-7;has_keyword">
+        <rdfs:domain rdf:resource="&untitled-ontology-7;Place"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#Context -->
+
+    <owl:Class rdf:about="&untitled-ontology-7;Context"/>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#Place -->
+
+    <owl:Class rdf:about="&untitled-ontology-7;Place"/>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#TimeOfDay -->
+
+    <owl:Class rdf:about="&untitled-ontology-7;TimeOfDay">
+        <rdfs:subClassOf rdf:resource="&untitled-ontology-7;Context"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#Weather -->
+
+    <owl:Class rdf:about="&untitled-ontology-7;Weather">
+        <rdfs:subClassOf rdf:resource="&untitled-ontology-7;Context"/>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#AfricanCuisine -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;AfricanCuisine">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_keyword>african cuisine</has_keyword>
+        <has_category>African</has_category>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Cloudy"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Evening"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#Afternoon -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;Afternoon">
+        <rdf:type rdf:resource="&untitled-ontology-7;TimeOfDay"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#AmericanCuisine -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;AmericanCuisine">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_keyword>american cuisine</has_keyword>
+        <has_category>American</has_category>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Cloudy"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Evening"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#ArtGallery -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;ArtGallery">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_category>Art Gallery</has_category>
+        <has_keyword>art gallery</has_keyword>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Cloudy"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Evening"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#AsianCuisine -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;AsianCuisine">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_category>Asian</has_category>
+        <has_keyword>asian cuisine</has_keyword>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Cloudy"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Evening"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#Beach -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;Beach">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_category>Beach</has_category>
+        <has_keyword>beach</has_keyword>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Evening"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Night"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#BoatingSpot -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;BoatingSpot">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_keyword>boating spot</has_keyword>
+        <has_category>Boating</has_category>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#BotanicalGarden -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;BotanicalGarden">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_category>Botanical Garden</has_category>
+        <has_keyword>botanical garden</has_keyword>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#BowlingSpot -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;BowlingSpot">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_keyword>bowling spot</has_keyword>
+        <has_category>Bowling</has_category>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Cloudy"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Evening"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Night"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Rainy"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Snowy"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#CampingSpot -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;CampingSpot">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_keyword>camping spot</has_keyword>
+        <has_category>Camping</has_category>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#ChineseCuisine -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;ChineseCuisine">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_category>Chinese</has_category>
+        <has_keyword>chinese cuisine</has_keyword>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Cloudy"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Evening"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#Cloudy -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;Cloudy">
+        <rdf:type rdf:resource="&untitled-ontology-7;Weather"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#CyclingSpot -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;CyclingSpot">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_keyword>cycling trail</has_keyword>
+        <has_category>Cycling</has_category>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#EscapeRoomSpot -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;EscapeRoomSpot">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_keyword>escape room</has_keyword>
+        <has_category>Escape Rooms</has_category>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Cloudy"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Evening"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Night"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Rainy"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Snowy"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#Evening -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;Evening">
+        <rdf:type rdf:resource="&untitled-ontology-7;TimeOfDay"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#FishingSpot -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;FishingSpot">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_keyword>fishing spot</has_keyword>
+        <has_category>Fishing</has_category>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Evening"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Night"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#FrenchCuisine -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;FrenchCuisine">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_category>French</has_category>
+        <has_keyword>french cuisine</has_keyword>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Cloudy"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Evening"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#GymWorkoutSpot -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;GymWorkoutSpot">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_keyword>gym spot</has_keyword>
+        <has_category>Gym Workout</has_category>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Cloudy"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Evening"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Night"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#HikingSpot -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;HikingSpot">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_keyword>hiking trail</has_keyword>
+        <has_category>Hiking
+</has_category>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#HistoricalMonumentSpot -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;HistoricalMonumentSpot">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_keyword>historical monument</has_keyword>
+        <has_category>Historical Monument</has_category>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Evening"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#IndianCuisine -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;IndianCuisine">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_keyword>indian cuisine</has_keyword>
+        <has_category>Indian</has_category>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Cloudy"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Evening"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#ItalianCuisine -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;ItalianCuisine">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_keyword>italian cuisine</has_keyword>
+        <has_category>Italian</has_category>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Cloudy"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Evening"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#JapaneseCuisine -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;JapaneseCuisine">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_category>Japanese</has_category>
+        <has_keyword>japanese cuisine</has_keyword>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Cloudy"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Evening"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#KayakingSpot -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;KayakingSpot">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_keyword>kayaking spot</has_keyword>
+        <has_category>Kayaking</has_category>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#KoreanCuisine -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;KoreanCuisine">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_category>Korean</has_category>
+        <has_keyword>korean cuisine</has_keyword>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Cloudy"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Evening"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#Lake -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;Lake">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_category>Lake</has_category>
+        <has_keyword>lake</has_keyword>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Evening"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#MediterraneanCuisine -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;MediterraneanCuisine">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_keyword>mediterranean cuisine</has_keyword>
+        <has_category>Mediterranean</has_category>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Cloudy"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Evening"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#MexicanCuisine -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;MexicanCuisine">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_keyword>mexican cuisine</has_keyword>
+        <has_category>Mexican</has_category>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Evening"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Rainy"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#MiddleEasternCuisine -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;MiddleEasternCuisine">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_category>Middle Easter</has_category>
+        <has_keyword>middle eastern cuisine</has_keyword>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Cloudy"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Evening"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#Morning -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;Morning">
+        <rdf:type rdf:resource="&untitled-ontology-7;TimeOfDay"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#Mountain -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;Mountain">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_category>Mountain</has_category>
+        <has_keyword>mountain</has_keyword>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#Museum -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;Museum">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_keyword>museum</has_keyword>
+        <has_category>Museum</has_category>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Cloudy"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Evening"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#Night -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;Night">
+        <rdf:type rdf:resource="&untitled-ontology-7;TimeOfDay"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#Park -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;Park">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_category>Park</has_category>
+        <has_keyword>park</has_keyword>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Evening"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#Rainy -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;Rainy">
+        <rdf:type rdf:resource="&untitled-ontology-7;Weather"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#SkiingSnowboardingSpot -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;SkiingSnowboardingSpot">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_keyword>skiing spot</has_keyword>
+        <has_keyword>snowboarding spot</has_keyword>
+        <has_category>Skiing / Snowboarding</has_category>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Evening"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Night"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#Snowy -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;Snowy">
+        <rdf:type rdf:resource="&untitled-ontology-7;Weather"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#SpaWellnessSpot -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;SpaWellnessSpot">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_keyword>spa wellness spot</has_keyword>
+        <has_category>Spa &amp; Wellness</has_category>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Cloudy"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Evening"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Rainy"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#Sunny -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;Sunny">
+        <rdf:type rdf:resource="&untitled-ontology-7;Weather"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#SwimmingSpot -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;SwimmingSpot">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_category>Swimming</has_category>
+        <has_keyword>swimming pool</has_keyword>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Cloudy"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Evening"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Rainy"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#ThaiCuisine -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;ThaiCuisine">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_keyword>thai cuisine</has_keyword>
+        <has_category>Thai</has_category>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Cloudy"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Evening"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#VietnameseCuisine -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;VietnameseCuisine">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_keyword>vietnamese cuisine</has_keyword>
+        <has_category>Vietnamese</has_category>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Cloudy"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Evening"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#VrGamingSpot -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;VrGamingSpot">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_keyword>vr gaming spot</has_keyword>
+        <has_category>VR Gaming</has_category>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Cloudy"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Evening"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Night"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Rainy"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#Waterfall -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;Waterfall">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_category>Waterfall</has_category>
+        <has_keyword>waterfall</has_keyword>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#YogaSpot -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;YogaSpot">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_keyword>yoga spot</has_keyword>
+        <has_category>Yoga</has_category>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Cloudy"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Evening"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Rainy"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mridu/ontologies/2025/10/untitled-ontology-7#ZipliningSpot -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-7;ZipliningSpot">
+        <rdf:type rdf:resource="&untitled-ontology-7;Place"/>
+        <has_keyword>ziplining spot</has_keyword>
+        <has_category>Ziplining</has_category>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Afternoon"/>
+        <is_good_for_time rdf:resource="&untitled-ontology-7;Morning"/>
+        <is_good_for_weather rdf:resource="&untitled-ontology-7;Sunny"/>
+    </owl:NamedIndividual>
+</rdf:RDF>
 
 
 

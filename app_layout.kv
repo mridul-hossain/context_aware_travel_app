@@ -4,6 +4,7 @@ MDScreenManager:
     CuisinesSelectionScreen:
     ActivitiesSelectionScreen:
     AttractionsSelectionScreen:
+    ProfileScreen:
 
 <LoginScreen>:
     name: "login"
@@ -871,3 +872,77 @@ MDScreenManager:
                         adaptive_width: True
                         spacing: "15dp"
                         padding: [0, 0, 0, 10]
+
+                # --- Section 3: Activities ---
+                MDLabel:
+                    text: "Activities to do"
+                    font_style: "H6"
+                    bold: True
+                    adaptive_height: True
+
+                MDScrollView:
+                    size_hint_y: None
+                    height: "190dp"
+                    do_scroll_x: True
+                    do_scroll_y: False
+                    bar_width: 0
+
+                    MDBoxLayout:
+                        id: activity_list
+                        orientation: 'horizontal'
+                        adaptive_width: True
+                        spacing: "15dp"
+                        padding: [0, 0, 0, 10]
+
+<ProfileScreen>
+    name: "profile"
+    MDBoxLayout:
+        orientation: "vertical"
+        md_bg_color: 1, 1, 1, 1 # White background
+
+        # --- HEADER ---
+        MDBoxLayout:
+            size_hint_y: None
+            height: dp(80)
+            padding: [dp(20), dp(10), dp(20), dp(10)] # Left, Top, Right, Bottom
+            spacing: dp(10)
+            md_bg_color: 1, 1, 1, 1
+            elevation: 0 
+
+            # --- Avatar ---
+            MDCard:
+                size_hint: None, None
+                size: dp(50), dp(50)
+                radius: [25, ] # Make it a perfect circle (half of size)
+                elevation: 0
+                pos_hint: {"center_y": 0.5}
+                
+                # FitImage handles circular cropping better than Image
+                FitImage:
+                    id: profile_image
+                    source: 'assets/user_avatar.png' 
+                    radius: [25, ] 
+
+            # --- Greeting Text ---
+            MDBoxLayout:
+                orientation: "vertical"
+                adaptive_height: True
+                adaptive_width: True
+                pos_hint: {"center_y": 0.5}
+
+                MDLabel:
+                    text: "Welcome back,"
+                    font_style: "Caption"
+                    theme_text_color: "Secondary"
+                    adaptive_height: True
+                    adaptive_width: True
+
+                MDLabel:
+                    id: user_name
+                    text: "" # Placeholder text
+                    bold: True
+                    font_size: "16sp"
+                    size_hint_x: 1
+                    theme_text_color: "Primary"
+                    adaptive_height: True
+                    adaptive_width: True

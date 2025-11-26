@@ -19,7 +19,7 @@ from kivy.graphics import Color, Rectangle
 
 # Import your modules
 from context_module import get_location, get_weather, get_google_places
-from ontology_module import load_ontology, suggest_activity
+from ontology_module import load_ontology, get_smart_recommendation
 from auth_module import google_login_flow
 import sqlite3
 from pathlib import Path
@@ -27,6 +27,8 @@ import threading
 from datetime import datetime
 
 DB_PATH = Path(__file__).parent / "database" / "travel_companion.db"
+
+# Global lists to hold temporary selections
 SELECTED_ATTRACTIONS = []
 SELECTED_ACTIVITIES = []
 SELECTED_CUISINES = []
@@ -44,11 +46,78 @@ class run_query():
             print("No user found")
         else:
             # Update info
-            c.execute("UPDATE users SET attraction_preference=?, activity_preference=?, cuisine_preference=? WHERE email=?", 
-                    (attraction_preference, activity_preference, cuisine_preference, email))
+            c.execute("UPDATE users SET attraction_preference=?, activity_preference=?, cuisine_preference=?, profile_status=? WHERE email=?", 
+                    (attraction_preference, activity_preference, cuisine_preference, 1, email))
 
         conn.commit()
         conn.close()
+
+    def get_user_profile_status(email):
+        conn = sqlite3.connect(DB_PATH.as_posix())
+        c = conn.cursor()
+
+        # Check if user exists
+        c.execute("SELECT profile_status FROM users WHERE email=?", (email,))
+        exists = c.fetchone()
+
+        if not exists:
+            print("No user found")
+        else:
+            return exists[0]
+
+        conn.commit()
+        conn.close()
+
+    def get_user_cuisine_preferences(email):
+        conn = sqlite3.connect(DB_PATH.as_posix())
+        c = conn.cursor()
+        c.execute("SELECT cuisine_preference FROM users WHERE email=?", (email,))
+        data = c.fetchone()
+        conn.close()
+        
+        if data:
+            # Join all strings and split by comma to get a single list of keywords
+            # Example: "Hiking, Museum" + "Italian" -> ["Hiking", "Museum", "Italian"]
+            prefs = []
+            for item in data:
+                if item:
+                    prefs.extend([x.strip() for x in item.split(",")])
+            return prefs
+        return []
+
+    def get_user_attraction_preferences(email):
+        conn = sqlite3.connect(DB_PATH.as_posix())
+        c = conn.cursor()
+        c.execute("SELECT attraction_preference FROM users WHERE email=?", (email,))
+        data = c.fetchone()
+        conn.close()
+        
+        if data:
+            # Join all strings and split by comma to get a single list of keywords
+            # Example: "Hiking, Museum" + "Italian" -> ["Hiking", "Museum", "Italian"]
+            prefs = []
+            for item in data:
+                if item:
+                    prefs.extend([x.strip() for x in item.split(",")])
+            return prefs
+        return []
+
+    def get_user_activity_preferences(email):
+        conn = sqlite3.connect(DB_PATH.as_posix())
+        c = conn.cursor()
+        c.execute("SELECT activity_preference FROM users WHERE email=?", (email,))
+        data = c.fetchone()
+        conn.close()
+        
+        if data:
+            # Join all strings and split by comma to get a single list of keywords
+            # Example: "Hiking, Museum" + "Italian" -> ["Hiking", "Museum", "Italian"]
+            prefs = []
+            for item in data:
+                if item:
+                    prefs.extend([x.strip() for x in item.split(",")])
+            return prefs
+        return []
 
 class LoginScreen(MDScreen):
     def do_login(self):
@@ -120,7 +189,10 @@ class LoginScreen(MDScreen):
         dashboard.ids.weather_icon.icon = icon_name
         dashboard.ids.weather_icon.text_color = icon_color
 
-        self.manager.current = "attractions_selection"
+        if run_query.get_user_profile_status(user_info['email']) == 0:
+            self.manager.current = "attractions_selection"
+        else:
+            self.manager.current = "dashboard"
 
 # --- Custom Button with Selection State and Solid Fill ---
 class SelectableFlatButton(MDRectangleFlatButton):
@@ -185,7 +257,7 @@ class AttractionsSelectionScreen(MDScreen):
                 SELECTED_ATTRACTIONS.append(button_text)
         else:
             # If the button is now unselected, remove its text from the list
-            if button_text in self.selected_attractions:
+            if button_text in SELECTED_ATTRACTIONS:
                 SELECTED_ATTRACTIONS.remove(button_text)
         
         print(f"Current selections: {SELECTED_ATTRACTIONS}") # For debugging
@@ -205,7 +277,7 @@ class ActivitiesSelectionScreen(MDScreen):
                 SELECTED_ACTIVITIES.append(button_text)
         else:
             # If the button is now unselected, remove its text from the list
-            if button_text in self.selected_activities:
+            if button_text in SELECTED_ACTIVITIES:
                 SELECTED_ACTIVITIES.remove(button_text)
         
         print(f"Current selections: {SELECTED_ACTIVITIES}") # For debugging
@@ -274,7 +346,7 @@ class DashboardScreen(MDScreen):
     def get_meal_context(self):
         """Returns (Phase Name, Display Title, API Keyword)"""
         # hour = datetime.now().hour
-        hour = 1 # right now its static for testing purpose
+        hour = 17 # right now its static for testing purpose
         
         if 5 <= hour < 11:
             return "Breakfast", "Morning Fuel", "breakfast"
@@ -292,11 +364,27 @@ class DashboardScreen(MDScreen):
         threading.Thread(target=self._fetch_all_data).start()
 
     def _fetch_all_data(self):
+        app = MDApp.get_running_app()
+
         # A. Context Data
         lat, lon, address = get_location()
         temp, condition = get_weather(lat, lon)
+        # hour = datetime.now().hour
+        hour = 20 # right now its static for testing purpose
+
+        # 2. Get User Preferences from DB
+        user_cuisine_prefs = run_query.get_user_cuisine_preferences(app.current_user_email)
+        user_attraction_prefs = run_query.get_user_attraction_preferences(app.current_user_email)
+        user_activity_prefs = run_query.get_user_activity_preferences(app.current_user_email)
+
+        # 3. ONTOLOGY REASONING
+        # We ask the ontology what to do based on Weather + Time + User Prefs
         ontology = load_ontology()
-        recommended = suggest_activity(temp, ontology)
+
+        # This returns a list of keywords like ['museum', 'italian restaurant']
+        smart_cuisine_keywords = get_smart_recommendation(ontology, condition, hour, user_cuisine_prefs)
+        smart_attraction_keywords = get_smart_recommendation(ontology, condition, hour, user_attraction_prefs)
+        smart_activity_keywords = get_smart_recommendation(ontology, condition, hour, user_activity_prefs)
         
         # B. Time-Based Logic
         phase, title, keyword = self.get_meal_context()
@@ -306,39 +394,63 @@ class DashboardScreen(MDScreen):
 
         # C. Places Data - Pass the 'keyword' to Google
         # Make sure your get_google_places accepts the 4th argument!
-        restaurants = get_google_places(lat, lon, "restaurant", keyword)
-        attractions = get_google_places(lat, lon, "tourist_attraction", "")
+        cuisines_data = []
+        if not user_cuisine_prefs:
+            cuisines_data = get_google_places(lat, lon, "restaurant", keyword)
+        else:
+            for key in smart_cuisine_keywords:
+                # We search specifically for what the ontology suggested
+                results = get_google_places(lat, lon, "restaurant", key+" "+keyword)
+                cuisines_data.extend(results)
+        
+        # Get Attractions (Smart logic: Ontology based)
+        # We loop through the smart keywords provided by the ontology
+        attractions_data = []
+        if not user_cuisine_prefs:
+            attractions_data = get_google_places(lat, lon, "tourist_attraction", "")
+        else:
+            for key in smart_attraction_keywords:
+                # We search specifically for what the ontology suggested
+                results = get_google_places(lat, lon, "", key)
+                attractions_data.extend(results)
+
+        # Get Activities (General fallback + Smart logic if needed)
+        activities_data = []
+        if not user_cuisine_prefs:
+            activities_data = get_google_places(lat, lon, "tourist_attraction", "activity")
+        else:
+            for key in smart_activity_keywords:
+                # We search specifically for what the ontology suggested
+                results = get_google_places(lat, lon, "", key)
+                activities_data.extend(results)
 
         # Update UI on Main Thread
         Clock.schedule_once(lambda dt: self.update_ui(
-            address, temp, condition, recommended, restaurants, attractions, title
+            address, temp, condition, cuisines_data, attractions_data, activities_data, title
         ))
 
-    def update_ui(self, address, temp, condition, recommended, restaurants, attractions, meal_title):
+    def update_ui(self, address, temp, condition, restaurants, attractions, activities, meal_title):
         # Update the Header Text dynamically
         self.ids.restaurant_header.text = meal_title
         
         # Clear existing lists to avoid duplicates
         self.ids.restaurant_list.clear_widgets()
         self.ids.attraction_list.clear_widgets()
+        self.ids.activity_list.clear_widgets()
 
-        # Populate Restaurants
-        for place in restaurants:
-            card = TravelLocationCard(
-                source=place['image'],
-                text=place['name'],
-                sub_text=f"{place['rating']} Stars"
-            )
-            self.ids.restaurant_list.add_widget(card)
+        def populate_list(data_list, ui_list_id):
+            # Limit to 10 to avoid UI overcrowding
+            for place in data_list[:10]:
+                card = TravelLocationCard(
+                    source=place['image'],
+                    text=place['name'],
+                    sub_text=f"{place['rating']} Stars"
+                )
+                ui_list_id.add_widget(card)
 
-        # Populate Attractions
-        for place in attractions:
-            card = TravelLocationCard(
-                source=place['image'],
-                text=place['name'],
-                sub_text=f"{place['rating']} Stars"
-            )
-            self.ids.attraction_list.add_widget(card)
+        populate_list(restaurants, self.ids.restaurant_list)
+        populate_list(attractions, self.ids.attraction_list)
+        populate_list(activities, self.ids.activity_list)
 
 class TravelApp(MDApp):
     current_user_email = None

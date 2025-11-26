@@ -17,7 +17,8 @@ def create_tables():
             profile_pic TEXT,
             attraction_preference LONGTEXT,
             activity_preference LONGTEXT,
-            cuisine_preference LONGTEXT
+            cuisine_preference LONGTEXT,
+            profile_status INT DEFAULT 0
         )
     ''')
 

@@ -7,7 +7,7 @@ def get_location():
         geolocator = Nominatim(user_agent="my_travel_companion_app_v1")
         
         # 2. Add 'timeout=10' (wait up to 10 seconds instead of 1)
-        location = geolocator.geocode("Mexico City", timeout=10, language='en') #currently static for testing purpose
+        location = geolocator.geocode("Montreal", timeout=10, language='en') #currently static for testing purpose
         
         if location:
             return (location.latitude, location.longitude, location.address)
@@ -49,11 +49,13 @@ def get_google_places(lat, lon, place_type="restaurant", keyword=None):
     
     params = {
         "location": f"{lat},{lon}",
-        "radius": 5000,  # Search within 2km
-        "type": place_type,
+        "radius": 20000,
         "keyword": keyword,
         "key": GOOGLE_API_KEY
     }
+
+    if place_type:
+        params["type"] = place_type
 
     if keyword:
         params["keyword"] = keyword
