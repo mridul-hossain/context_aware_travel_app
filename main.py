@@ -24,11 +24,31 @@ from auth_module import google_login_flow
 import sqlite3
 from pathlib import Path
 import threading
+from datetime import datetime
 
 DB_PATH = Path(__file__).parent / "database" / "travel_companion.db"
 SELECTED_ATTRACTIONS = []
 SELECTED_ACTIVITIES = []
 SELECTED_CUISINES = []
+
+class run_query():
+    def update_preference(attraction_preference, activity_preference, cuisine_preference, email):
+        conn = sqlite3.connect(DB_PATH.as_posix())
+        c = conn.cursor()
+
+        # Check if user exists
+        c.execute("SELECT * FROM users WHERE email=?", (email,))
+        exists = c.fetchone()
+
+        if not exists:
+            print("No user found")
+        else:
+            # Update info
+            c.execute("UPDATE users SET attraction_preference=?, activity_preference=?, cuisine_preference=? WHERE email=?", 
+                    (attraction_preference, activity_preference, cuisine_preference, email))
+
+        conn.commit()
+        conn.close()
 
 class LoginScreen(MDScreen):
     def do_login(self):
@@ -211,6 +231,13 @@ class CuisinesSelectionScreen(MDScreen):
         print(f"Current selections: {SELECTED_CUISINES}") # For debugging
 
     def go_to_dashboard(self):
+        # Update user preference in DB
+        app = MDApp.get_running_app()
+        attraction_preference = ", ".join(SELECTED_ATTRACTIONS)
+        activities_preference = ", ".join(SELECTED_ACTIVITIES)
+        cuisine_preference = ", ".join(SELECTED_CUISINES)
+        run_query.update_preference(attraction_preference, activities_preference, cuisine_preference, app.current_user_email)
+
         # Simply switch to the dashboard screen after the survey is 'complete'
         self.manager.current = "dashboard"
 
@@ -220,34 +247,45 @@ class TravelLocationCard(MDCard):
     sub_text = StringProperty()
 
 class DashboardScreen(MDScreen):
-    def fetch_context(self):
-        # 1. Get Data
-        lat, lon, address = get_location()
-        temp, condition = get_weather(lat, lon)
-        ontology = load_ontology()
-        recommended = suggest_activity(temp, ontology)
-
-        # 2. Update UI
-        self.ids.location_label.text = f"Location: {address}"
-        self.ids.weather_label.text = f"Temp: {temp}°C, {condition}"
-        self.ids.activity_label.text = f"Suggestion: {recommended}"
-
-        # 3. Save to DB with User Email
-        app = MDApp.get_running_app()
-        user_email = getattr(app, 'current_user_email', 'anonymous')
-
-        conn = sqlite3.connect(DB_PATH.as_posix())
-        c = conn.cursor()
-        c.execute("""
-            INSERT INTO user_context (user_email, location, temperature, recommended_activity) 
-            VALUES (?, ?, ?, ?)
-        """, (user_email, address, temp, recommended))
-        conn.commit()
-        conn.close()
+    current_meal_phase = StringProperty("") # Tracks current phase to avoid unnecessary reloads
+    auto_refresh_event = None # To store the clock schedule
 
     def on_enter(self):
         # Trigger data loading when screen is shown
         self.load_data()
+
+        # 2. Schedule a check every 60 seconds to see if meal time changed
+        self.auto_refresh_event = Clock.schedule_interval(self.check_time_and_refresh, 60)
+
+    def on_leave(self):
+        # Stop the clock when leaving dashboard to save resources
+        if self.auto_refresh_event:
+            Clock.unschedule(self.auto_refresh_event)
+
+    def check_time_and_refresh(self, dt):
+        # Calculate what the phase SHOULD be right now
+        new_phase, _, _ = self.get_meal_context()
+        
+        # Only fetch new data if the phase has changed (e.g., switched from Lunch to Dinner)
+        if new_phase != self.current_meal_phase:
+            print(f"Time changed to {new_phase}. Refreshing data...")
+            self.load_data()
+
+    def get_meal_context(self):
+        """Returns (Phase Name, Display Title, API Keyword)"""
+        # hour = datetime.now().hour
+        hour = 1 # right now its static for testing purpose
+        
+        if 5 <= hour < 11:
+            return "Breakfast", "Morning Fuel", "breakfast"
+        elif 11 <= hour < 15:
+            return "Lunch", "Lunch Spots", "lunch"
+        elif 15 <= hour < 18:
+            return "Snacks", "Afternoon Snacks", "cafe"
+        elif 18 <= hour < 22:
+            return "Dinner", "Dinner Time", "dinner"
+        else:
+            return "LateNight", "Late Night Eats", "late night food"
 
     def load_data(self):
         # Run in thread to prevent UI freeze
@@ -260,16 +298,25 @@ class DashboardScreen(MDScreen):
         ontology = load_ontology()
         recommended = suggest_activity(temp, ontology)
         
-        # B. Places Data (Restaurants & Attractions)
-        restaurants = get_google_places(lat, lon, "restaurant", "")
+        # B. Time-Based Logic
+        phase, title, keyword = self.get_meal_context()
+        
+        # Store current phase so we know when it changes later
+        self.current_meal_phase = phase
+
+        # C. Places Data - Pass the 'keyword' to Google
+        # Make sure your get_google_places accepts the 4th argument!
+        restaurants = get_google_places(lat, lon, "restaurant", keyword)
         attractions = get_google_places(lat, lon, "tourist_attraction", "")
 
         # Update UI on Main Thread
         Clock.schedule_once(lambda dt: self.update_ui(
-            address, temp, condition, recommended, restaurants, attractions
+            address, temp, condition, recommended, restaurants, attractions, title
         ))
 
-    def update_ui(self, address, temp, condition, recommended, restaurants, attractions):
+    def update_ui(self, address, temp, condition, recommended, restaurants, attractions, meal_title):
+        # Update the Header Text dynamically
+        self.ids.restaurant_header.text = meal_title
         
         # Clear existing lists to avoid duplicates
         self.ids.restaurant_list.clear_widgets()

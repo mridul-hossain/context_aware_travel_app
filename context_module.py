@@ -7,7 +7,7 @@ def get_location():
         geolocator = Nominatim(user_agent="my_travel_companion_app_v1")
         
         # 2. Add 'timeout=10' (wait up to 10 seconds instead of 1)
-        location = geolocator.geocode("New York", timeout=10) 
+        location = geolocator.geocode("Mexico City", timeout=10, language='en') #currently static for testing purpose
         
         if location:
             return (location.latitude, location.longitude, location.address)
@@ -38,7 +38,7 @@ def get_weather(lat, lon):
         print(f"Weather API failed: {e}")
         return 20, "Clear Sky (Offline)"
 
-def get_google_places(lat, lon, place_type="restaurant", keyword=""):
+def get_google_places(lat, lon, place_type="restaurant", keyword=None):
     """
     Fetches places from Google Places API.
     place_type examples: 'restaurant', 'tourist_attraction', 'museum'
@@ -54,6 +54,9 @@ def get_google_places(lat, lon, place_type="restaurant", keyword=""):
         "keyword": keyword,
         "key": GOOGLE_API_KEY
     }
+
+    if keyword:
+        params["keyword"] = keyword
     
     try:
         response = requests.get(url, params=params)
