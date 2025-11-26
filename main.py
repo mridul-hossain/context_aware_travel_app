@@ -14,6 +14,8 @@ from kivy.clock import Clock
 from kivy.clock import mainthread
 from kivymd.uix.card import MDCard
 from kivy.properties import StringProperty
+from kivy.properties import BooleanProperty 
+from kivy.graphics import Color, Rectangle
 
 # Import your modules
 from context_module import get_location, get_weather, get_google_places
@@ -24,6 +26,9 @@ from pathlib import Path
 import threading
 
 DB_PATH = Path(__file__).parent / "database" / "travel_companion.db"
+SELECTED_ATTRACTIONS = []
+SELECTED_ACTIVITIES = []
+SELECTED_CUISINES = []
 
 class LoginScreen(MDScreen):
     def do_login(self):
@@ -97,17 +102,114 @@ class LoginScreen(MDScreen):
 
         self.manager.current = "attractions_selection"
 
+# --- Custom Button with Selection State and Solid Fill ---
+class SelectableFlatButton(MDRectangleFlatButton):
+    # A property to track the selection state
+    is_selected = BooleanProperty(False)
+
+    def on_press(self):
+        # Toggle the selection state on press
+        self.is_selected = not self.is_selected
+        
+        # Trigger the screen method to update the master list
+        # We rely on the KV binding (see step 3) to call the screen's method
+
+    def on_is_selected(self, instance, value):
+        # Update button appearance when selection state changes
+        self.update_canvas()
+    
+    def update_canvas(self, *args):
+        # Ensure MDApp is available
+        app = MDApp.get_running_app()
+        if not app:
+            return
+
+        primary_color = app.theme_cls.primary_color
+        
+        # Remove old drawing instructions
+        self.canvas.before.clear()
+
+        with self.canvas.before:
+            if self.is_selected:
+                # When selected: Draw a solid rectangle
+                Color(*primary_color)
+                Rectangle(pos=self.pos, size=self.size)
+                
+                # Set text and line color to white
+                self.theme_text_color = "Custom"
+                self.text_color = 1, 1, 1, 1  # White
+                self.line_color = primary_color 
+            else:
+                # When unselected: Default appearance (Black text and line)
+                # Setting a transparent color to avoid canvas conflicts if needed, 
+                # but MDRectangleFlatButton handles its non-fill state well.
+                self.theme_text_color = "Custom"
+                self.text_color = 0, 0, 0, 1  # Black
+                self.line_color = 0, 0, 0, 1  # Black line color
+
+    # Ensure the canvas updates when the button size/position changes
+    def on_size(self, *args):
+        self.update_canvas()
+
+    def on_pos(self, *args):
+        self.update_canvas()
+
 class AttractionsSelectionScreen(MDScreen):
-    def go_to_dashboard(self):
+
+    def handle_selection(self, button_instance):
+        button_text = button_instance.text
+        
+        if button_instance.is_selected:
+            # If the button is now selected, add its text to the list
+            if button_text not in SELECTED_ATTRACTIONS:
+                SELECTED_ATTRACTIONS.append(button_text)
+        else:
+            # If the button is now unselected, remove its text from the list
+            if button_text in self.selected_attractions:
+                SELECTED_ATTRACTIONS.remove(button_text)
+        
+        print(f"Current selections: {SELECTED_ATTRACTIONS}") # For debugging
+
+    def go_to_next_screen(self):
         # Simply switch to the dashboard screen after the survey is 'complete'
         self.manager.current = "activities_selection"
 
 class ActivitiesSelectionScreen(MDScreen):
-    def go_to_dashboard(self):
+
+    def handle_selection(self, button_instance):
+        button_text = button_instance.text
+        
+        if button_instance.is_selected:
+            # If the button is now selected, add its text to the list
+            if button_text not in SELECTED_ACTIVITIES:
+                SELECTED_ACTIVITIES.append(button_text)
+        else:
+            # If the button is now unselected, remove its text from the list
+            if button_text in self.selected_activities:
+                SELECTED_ACTIVITIES.remove(button_text)
+        
+        print(f"Current selections: {SELECTED_ACTIVITIES}") # For debugging
+
+    def go_to_next_screen(self):
         # Simply switch to the dashboard screen after the survey is 'complete'
         self.manager.current = "cuisines_selection"
 
 class CuisinesSelectionScreen(MDScreen):
+
+    def handle_selection(self, button_instance):
+        button_text = button_instance.text
+        
+        if button_instance.is_selected:
+            # If the button is now selected, add its text to the list
+            if button_text not in SELECTED_CUISINES:
+                SELECTED_CUISINES.append(button_text)
+        else:
+            # If the button is now unselected, remove its text from the list
+            if button_text in SELECTED_CUISINES:
+                SELECTED_CUISINES.remove(button_text)
+        
+        print(f"Current selections: {SELECTED_CUISINES}") # For debugging
+
     def go_to_dashboard(self):
         # Simply switch to the dashboard screen after the survey is 'complete'
         self.manager.current = "dashboard"
@@ -159,8 +261,8 @@ class DashboardScreen(MDScreen):
         recommended = suggest_activity(temp, ontology)
         
         # B. Places Data (Restaurants & Attractions)
-        restaurants = get_google_places(lat, lon, "restaurant")
-        attractions = get_google_places(lat, lon, "tourist_attraction")
+        restaurants = get_google_places(lat, lon, "restaurant", "")
+        attractions = get_google_places(lat, lon, "tourist_attraction", "")
 
         # Update UI on Main Thread
         Clock.schedule_once(lambda dt: self.update_ui(

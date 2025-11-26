@@ -123,10 +123,10 @@ MDScreenManager:
                     size_hint: None, None
                     size: dp(30), dp(30)
                     line_color: 0, 0, 0, 0 # Remove border line
-                    on_release: root.manager.current = "login" # Action: Go back to login
+                    on_release: root.manager.current = "activities_selection" # Action: Go back to ActivitiesSelectionScreen
 
                 Widget: #space to push right
-                    size_hint_x: 0.5
+                    size_hint_x: 0.35
 
                 # --- The 3 Dashes Container ---
                 MDBoxLayout:
@@ -159,18 +159,6 @@ MDScreenManager:
                         pos_hint: {"center_x": 0.5, "center_y": 0.5}
                         md_bg_color: app.theme_cls.primary_color
                         elevation: 0
-
-                # --- Skip Button ---
-                MDFlatButton:
-                    text: "Skip"
-                    pos_hint: {"center_y": 0.5, "right": 1}
-                    size_hint: None, None # Fixed width
-                    width: dp(60) 
-                    theme_text_color: "Hint" # Use a lighter color for skip
-                    font_size: "14sp"
-                    bold: True
-                    # Action: Skip the survey and go to the dashboard
-                    on_release: root.go_to_dashboard()
             
             Widget: # Spacer to push text down
                 size_hint_y: 0.1
@@ -215,71 +203,71 @@ MDScreenManager:
                 # Theme colors are used to style the buttons when selected/unselected.
 
                 # Row 1
-                MDRectangleFlatButton:
+                SelectableFlatButton:
                     text: "Indian"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
-                MDRectangleFlatButton:
+                    on_release: root.handle_selection(self)
+                SelectableFlatButton:
                     text: "Chinese"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
-                MDRectangleFlatButton:
+                    on_release: root.handle_selection(self)
+                SelectableFlatButton:
                     text: "Japanese"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                    on_release: root.handle_selection(self)
                 
                 # Row 2
-                MDRectangleFlatButton:
+                SelectableFlatButton:
                     text: "Korean"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
-                MDRectangleFlatButton:
+                    on_release: root.handle_selection(self)
+                SelectableFlatButton:
                     text: "Thai"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
-                MDRectangleFlatButton:
+                    on_release: root.handle_selection(self)
+                SelectableFlatButton:
                     text: "Italian"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                    on_release: root.handle_selection(self)
                 
                 # Row 3
-                MDRectangleFlatButton:
+                SelectableFlatButton:
                     text: "French"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
-                MDRectangleFlatButton:
+                    on_release: root.handle_selection(self)
+                SelectableFlatButton:
                     text: "Mexican"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
-                MDRectangleFlatButton:
+                    on_release: root.handle_selection(self)
+                SelectableFlatButton:
                     text: "Middle Eastern"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                    on_release: root.handle_selection(self)
                 
                 # Row 4 (Example options)
-                MDRectangleFlatButton:
+                SelectableFlatButton:
                     text: "Vietnamese"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
-                MDRectangleFlatButton:
+                    on_release: root.handle_selection(self)
+                SelectableFlatButton:
                     text: "American"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
-                MDRectangleFlatButton:
+                    on_release: root.handle_selection(self)
+                SelectableFlatButton:
                     text: "Local / Traditional"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                    on_release: root.handle_selection(self)
 
                 # Row 5 (Example options)
-                MDRectangleFlatButton:
+                SelectableFlatButton:
                     text: "African"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                    on_release: root.handle_selection(self)
 
 
         # --- Next Button (MDRaisedButton simulates the fill color) ---
         MDRaisedButton:
-            text: "Next"
+            text: "Complete"
             pos_hint: {"center_x": 0.5}
             size_hint_x: 1
             height: dp(50)
@@ -318,7 +306,7 @@ MDScreenManager:
                     size_hint: None, None
                     size: dp(30), dp(30)
                     line_color: 0, 0, 0, 0 # Remove border line
-                    on_release: root.manager.current = "login" # Action: Go back to login
+                    on_release: root.manager.current = "attractions_selection" # Action: Go back to AttractionsSelectionScreen
 
                 Widget: #space to push right
                     size_hint_x: 0.5
@@ -365,7 +353,7 @@ MDScreenManager:
                     font_size: "14sp"
                     bold: True
                     # Action: Skip the survey and go to the dashboard
-                    on_release: root.go_to_dashboard()
+                    on_release: root.go_to_next_screen()
             
             Widget: # Spacer to push text down
                 size_hint_y: 0.1
@@ -410,74 +398,74 @@ MDScreenManager:
                 # Theme colors are used to style the buttons when selected/unselected.
 
                 # Row 1
-                MDRectangleFlatButton:
+                SelectableFlatButton:
                     text: "Hiking"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
-                MDRectangleFlatButton:
+                    on_release: root.handle_selection(self)
+                SelectableFlatButton:
                     text: "Cycling"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
-                MDRectangleFlatButton:
+                    on_release: root.handle_selection(self)
+                SelectableFlatButton:
                     text: "Kayaking"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                    on_release: root.handle_selection(self)
                 
                 # Row 2
-                MDRectangleFlatButton:
+                SelectableFlatButton:
                     text: "Boating"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
-                MDRectangleFlatButton:
+                    on_release: root.handle_selection(self)
+                SelectableFlatButton:
                     text: "Camping"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
-                MDRectangleFlatButton:
+                    on_release: root.handle_selection(self)
+                SelectableFlatButton:
                     text: "Fishing"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                    on_release: root.handle_selection(self)
                 
                 # Row 3
-                MDRectangleFlatButton:
+                SelectableFlatButton:
                     text: "Yoga"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
-                MDRectangleFlatButton:
+                    on_release: root.handle_selection(self)
+                SelectableFlatButton:
                     text: "Ziplining"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
-                MDRectangleFlatButton:
+                    on_release: root.handle_selection(self)
+                SelectableFlatButton:
                     text: "Gym Workout"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                    on_release: root.handle_selection(self)
                 
                 # Row 4 (Example options)
-                MDRectangleFlatButton:
+                SelectableFlatButton:
                     text: "Swimming"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
-                MDRectangleFlatButton:
+                    on_release: root.handle_selection(self)
+                SelectableFlatButton:
                     text: "Bowling"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
-                MDRectangleFlatButton:
+                    on_release: root.handle_selection(self)
+                SelectableFlatButton:
                     text: "Escape Rooms"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                    on_release: root.handle_selection(self)
 
                 # Row 5 (Example options)
-                MDRectangleFlatButton:
+                SelectableFlatButton:
                     text: "VR Gaming"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
-                MDRectangleFlatButton:
+                    on_release: root.handle_selection(self)
+                SelectableFlatButton:
                     text: "Spa & Wellness"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
-                MDRectangleFlatButton:
+                    on_release: root.handle_selection(self)
+                SelectableFlatButton:
                     text: "Skiing / Snowboarding"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                    on_release: root.handle_selection(self)
 
 
         # --- Next Button (MDRaisedButton simulates the fill color) ---
@@ -487,7 +475,7 @@ MDScreenManager:
             size_hint_x: 1
             height: dp(50)
             # The on_release action links to the method in SurveyScreen
-            on_release: root.go_to_dashboard()
+            on_release: root.go_to_next_screen()
 
 <AttractionsSelectionScreen>:
     name: "attractions_selection"
@@ -555,7 +543,7 @@ MDScreenManager:
                     font_size: "14sp"
                     bold: True
                     # Action: Skip the survey and go to the dashboard
-                    on_release: root.go_to_dashboard()
+                    on_release: root.go_to_next_screen()
             
             Widget: # Spacer to push text down
                 size_hint_y: 0.1
@@ -572,7 +560,7 @@ MDScreenManager:
                 size_hint_y: 0.1
             
             MDLabel:
-                text: "Which travel destinations do you like?"
+                text: "What types of places do you most enjoy visiting?"
                 halign: "center"
                 theme_text_color: "Primary"
                 bold: True
@@ -600,46 +588,46 @@ MDScreenManager:
                 # Theme colors are used to style the buttons when selected/unselected.
 
                 # Row 1
-                MDRectangleFlatButton:
+                SelectableFlatButton:
                     text: "Beach"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
-                MDRectangleFlatButton:
+                    on_release: root.handle_selection(self)
+                SelectableFlatButton:
                     text: "Mountain"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
-                MDRectangleFlatButton:
+                    on_release: root.handle_selection(self)
+                SelectableFlatButton:
                     text: "Museum"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                    on_release: root.handle_selection(self)
                 
                 # Row 2
-                MDRectangleFlatButton:
+                SelectableFlatButton:
                     text: "Art Gallery"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
-                MDRectangleFlatButton:
+                    on_release: root.handle_selection(self)
+                SelectableFlatButton:
                     text: "Waterfall"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
-                MDRectangleFlatButton:
+                    on_release: root.handle_selection(self)
+                SelectableFlatButton:
                     text: "Park"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                    on_release: root.handle_selection(self)
                 
                 # Row 3
-                MDRectangleFlatButton:
+                SelectableFlatButton:
                     text: "Lake"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
-                MDRectangleFlatButton:
+                    on_release: root.handle_selection(self)
+                SelectableFlatButton:
                     text: "Riverside"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
-                MDRectangleFlatButton:
+                    on_release: root.handle_selection(self)
+                SelectableFlatButton:
                     text: "Historical Monument"
                     font_size: "14sp"
-                    on_release: self.text_color = app.theme_cls.primary_color if self.text_color == [0, 0, 0, 1] else [0, 0, 0, 1]
+                    on_release: root.handle_selection(self)
 
 
         # --- Next Button (MDRaisedButton simulates the fill color) ---
@@ -649,7 +637,7 @@ MDScreenManager:
             size_hint_x: 1
             height: dp(50)
             # The on_release action links to the method in SurveyScreen
-            on_release: root.go_to_dashboard()
+            on_release: root.go_to_next_screen()
 
 <TravelLocationCard>:
     orientation: "vertical"
