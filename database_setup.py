@@ -8,25 +8,17 @@ def create_tables():
     conn = sqlite3.connect(DB_PATH.as_posix())
     c = conn.cursor()
 
-    # Existing table
-    c.execute('''
-        CREATE TABLE IF NOT EXISTS user_context (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_email TEXT,  -- Added to link data to a user
-            location TEXT,
-            temperature REAL,
-            recommended_activity TEXT,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    ''')
-
-    # New User table
+    # User table
     c.execute('''
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             email TEXT UNIQUE,
             name TEXT,
-            profile_pic TEXT
+            profile_pic TEXT,
+            attraction_preference LONGTEXT,
+            activity_preference LONGTEXT,
+            cuisine_preference LONGTEXT,
+            profile_status INT DEFAULT 0
         )
     ''')
 
