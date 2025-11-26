@@ -5,6 +5,7 @@ MDScreenManager:
     ActivitiesSelectionScreen:
     AttractionsSelectionScreen:
     ProfileScreen:
+    NotificationScreen:
 
 <LoginScreen>:
     name: "login"
@@ -647,13 +648,13 @@ MDScreenManager:
     radius: [15]
     ripple_behavior: True
     md_bg_color: 1, 1, 1, 1
-    elevation: 2
+    elevation: 0
 
     FitImage:
         id: place_image
         source: root.source
         size_hint_y: .65
-        radius: [15, 15, 0, 0]
+        radius: [10, 10, 10, 10]
 
     MDBoxLayout:
         orientation: "vertical"
@@ -724,6 +725,7 @@ MDScreenManager:
                 pos_hint: {"center_y": 0.5}
 
                 MDLabel:
+                    id: greetings_label
                     text: "Welcome back,"
                     font_style: "Caption"
                     theme_text_color: "Secondary"
@@ -744,19 +746,37 @@ MDScreenManager:
             Widget:
                 size_hint_x: 1
 
-            # -- Notification Button ---
-            MDIconButton:
-                icon: "bell"
-                pos_hint: {"right": 1, "center_y": 0.5}
-                theme_icon_color: "Custom"
-                icon_color: 0, 0, 0, 1 # Black icon
-                md_bg_color: 0.95, 0.95, 0.95, 1 # Light gray background for the circle
-                # Force a rounded background circle (size must match radius)
+            # -- Notification Area (Wrapper for Button + Red Dot) ---
+            MDFloatLayout:
                 size_hint: None, None
-                size: dp(20), dp(20)
-                user_font_size: "12sp"
-                line_color: 0, 0, 0, 0 # Remove border line
-                on_release: print("user pressed settings button")
+                size: dp(40), dp(40)
+                pos_hint: {"center_y": 0.5}
+
+                # 1. Your Existing Button (Preserved)
+                MDIconButton:
+                    icon: "bell"
+                    # Updated pos_hint to center it inside this wrapper
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5} 
+                    theme_icon_color: "Custom"
+                    icon_color: 0, 0, 0, 1
+                    md_bg_color: 0.95, 0.95, 0.95, 1
+                    size_hint: None, None
+                    size: dp(40), dp(40)
+                    user_font_size: "18sp"
+                    line_color: 0, 0, 0, 0
+                    # Updated action to hide dot before switching screens
+                    on_release: root.open_notifications()
+
+                # 2. The Red Dot Badge
+                MDCard:
+                    id: notification_dot
+                    size_hint: None, None
+                    size: dp(10), dp(10)
+                    radius: [5,]            # Makes it a perfect circle
+                    md_bg_color: 1, 0, 0, 1 # Red Color
+                    pos_hint: {"top": 0.9, "right": 0.9}
+                    elevation: 0
+                    opacity: 0              # Hidden by default
 
             # --- Settings Button ---
             MDIconButton:
@@ -776,6 +796,7 @@ MDScreenManager:
             size_hint_y: None
             height: dp(120) # Slightly taller for better spacing
             padding: [dp(20), 0, dp(20), 0]
+            spacing: dp(15)
 
             MDCard:
                 size_hint: 1, 1
@@ -823,6 +844,8 @@ MDScreenManager:
 
         # --- REST OF CONTENT ---
         MDScrollView:
+            do_scroll_y: True
+
             MDBoxLayout:
                 orientation: "vertical"
                 size_hint_y: None
@@ -958,3 +981,48 @@ MDScreenManager:
             size_hint_x: 1
             height: dp(50)
             on_release: root.save_and_exit()
+
+<NotificationScreen>:
+    name: "notifications"
+    MDBoxLayout:
+        orientation: "vertical"
+        padding: dp(20)
+        spacing: dp(10)
+        md_bg_color: 1, 1, 1, 1
+
+        # --- Header (Back Button + Title) ---
+        MDBoxLayout:
+            size_hint_y: None
+            height: dp(50)
+            spacing: dp(10)
+
+            MDIconButton:
+                icon: "chevron-left"
+                pos_hint: {"center_y": 0.5}
+                theme_icon_color: "Custom"
+                icon_color: 0, 0, 0, 1
+                md_bg_color: 0.95, 0.95, 0.95, 1
+                size_hint: None, None
+                size: dp(30), dp(30)
+                line_color: 0, 0, 0, 0
+                on_release: root.manager.current = "dashboard"
+
+            MDLabel:
+                text: "Notifications"
+                font_style: "H6"
+                bold: True
+                pos_hint: {"center_y": 0.5}
+                theme_text_color: "Primary"
+
+        # --- Divider ---
+        MDBoxLayout:
+            size_hint_y: None
+            height: dp(1)
+            md_bg_color: 0.9, 0.9, 0.9, 1
+
+        # --- Notification List ---
+        MDScrollView:
+            MDList:
+                id: notification_list
+                padding: dp(10)
+                spacing: dp(10)

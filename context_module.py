@@ -1,5 +1,6 @@
 import requests
 from geopy.geocoders import Nominatim
+from geopy.exc import GeocoderTimedOut, GeocoderUnavailable
 
 def get_location():
     try:

@@ -16,6 +16,8 @@ from kivymd.uix.card import MDCard
 from kivy.properties import StringProperty
 from kivy.properties import BooleanProperty 
 from kivy.graphics import Color, Rectangle
+from kivymd.toast import toast
+from kivymd.uix.list import TwoLineListItem, MDList
 
 # Import your modules
 from context_module import get_location, get_weather, get_google_places
@@ -39,18 +41,19 @@ ALL_CUISINES = [
     "French", "Mexican", "Middle Eastern", "Vietnamese", 
     "American", "Local / Traditional", "African"
 ]
-
 ALL_ACTIVITIES = [
     "Hiking", "Cycling", "Kayaking", "Boating", "Camping", 
     "Fishing", "Yoga", "Ziplining", "Gym Workout", "Swimming", 
     "Bowling", "Escape Rooms", "VR Gaming", "Spa & Wellness", 
     "Skiing / Snowboarding"
 ]
-
 ALL_ATTRACTIONS = [
     "Beach", "Mountain", "Museum", "Art Gallery", "Waterfall", 
     "Park", "Lake", "Riverside", "Historical Monument"
 ]
+
+# Globar attribute for setting hour mannually for testing
+HOUR = 3
 
 class run_query():
     def update_preference(attraction_preference, activity_preference, cuisine_preference, email):
@@ -345,11 +348,29 @@ class DashboardScreen(MDScreen):
     auto_refresh_event = None # To store the clock schedule
 
     def on_enter(self):
+        self.set_dynamic_greeting()
+
         # Trigger data loading when screen is shown
         self.load_data()
 
         # 2. Schedule a check every 60 seconds to see if meal time changed
-        self.auto_refresh_event = Clock.schedule_interval(self.check_time_and_refresh, 60)
+        self.auto_refresh_event = Clock.schedule_interval(self.check_time_and_refresh, 30)
+
+    def set_dynamic_greeting(self):
+        # Get current hour (0-23)
+        # current_hour = datetime.now().hour
+        current_hour = HOUR
+
+        if 5 <= current_hour < 12:
+            greeting = "Good Morning"
+        elif 12 <= current_hour < 17:
+            greeting = "Good Afternoon"
+        elif 17 <= current_hour < 21:
+            greeting = "Good Evening"
+        else:
+            greeting = "Greetings"
+
+        self.ids.greetings_label.text = greeting
 
     def on_leave(self):
         # Stop the clock when leaving dashboard to save resources
@@ -357,18 +378,53 @@ class DashboardScreen(MDScreen):
             Clock.unschedule(self.auto_refresh_event)
 
     def check_time_and_refresh(self, dt):
+        # --- TEST CODE: TOGGLE TIME AUTOMATICALLY ---
+        global HOUR
+        if HOUR == 12:
+            print("Time Travel: Switching to Dinner (19:00)")
+            HOUR = 19  # Force change to Dinner
+        else:
+            print("Time Travel: Switching to Lunch (12:00)")
+            HOUR = 12  # Force change back to Lunch
+        # --------------------------------------------
+
         # Calculate what the phase SHOULD be right now
         new_phase, _, _ = self.get_meal_context()
         
         # Only fetch new data if the phase has changed (e.g., switched from Lunch to Dinner)
         if new_phase != self.current_meal_phase:
             print(f"Time changed to {new_phase}. Refreshing data...")
+
+            app = MDApp.get_running_app()
+            current_time = datetime.now().strftime("%I:%M %p")
+            
+            # Create the notification dictionary
+            new_note = {
+                "title": f"New Recommendations: {new_phase}",
+                "time": f"Updated at {current_time}. Check out new spots!"
+            }
+            
+            # Add to the global list
+            app.notification_history.append(new_note)
+
+            # SHOW THE RED DOT
+            self.ids.notification_dot.opacity = 1
+            
+            # Optional: Show a small toast popup on screen
+            toast("New recommendations available!")
+
             self.load_data()
+
+    def open_notifications(self):
+        # Hide the red dot
+        self.ids.notification_dot.opacity = 0
+        # Switch to the screen
+        self.manager.current = "notifications"
 
     def get_meal_context(self):
         """Returns (Phase Name, Display Title, API Keyword)"""
         # hour = datetime.now().hour
-        hour = 17 # right now its static for testing purpose
+        hour = HOUR # right now its static for testing purpose
         
         if 5 <= hour < 11:
             return "Breakfast", "Morning Fuel", "breakfast"
@@ -392,7 +448,7 @@ class DashboardScreen(MDScreen):
         lat, lon, address = get_location()
         temp, condition = get_weather(lat, lon)
         # hour = datetime.now().hour
-        hour = 20 # right now its static for testing purpose
+        hour = HOUR # right now its static for testing purpose
 
         # 2. Get User Preferences from DB
         user_cuisine_prefs = run_query.get_user_cuisine_preferences(app.current_user_email)
@@ -576,9 +632,34 @@ class ProfileScreen(MDScreen):
         # 3. Go back to Dashboard
         self.manager.current = "dashboard"
 
+class NotificationScreen(MDScreen):
+    def on_enter(self):
+        # Clear existing widgets to avoid duplicates
+        self.ids.notification_list.clear_widgets()
+        
+        app = MDApp.get_running_app()
+        
+        # Check if empty
+        if not app.notification_history:
+            no_data = TwoLineListItem(
+                text="No new notifications",
+                secondary_text="We will notify you when recommendations update.",
+            )
+            self.ids.notification_list.add_widget(no_data)
+            return
+
+        # Loop through history (Reversed so newest is at top)
+        for note in reversed(app.notification_history):
+            item = TwoLineListItem(
+                text=note['title'],
+                secondary_text=note['time'],
+            )
+            self.ids.notification_list.add_widget(item)
+
 class TravelApp(MDApp):
     current_user_email = None
     current_user_name = None
+    notification_history = []
 
     def build(self):
         self.title = "Travel Companion"
