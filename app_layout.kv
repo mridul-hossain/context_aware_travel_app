@@ -769,7 +769,7 @@ MDScreenManager:
                 size_hint: None, None
                 size: dp(20), dp(20)
                 line_color: 0, 0, 0, 0 # Remove border line
-                on_release: print("user pressed settings button")
+                on_release: root.manager.current = "profile"
 
         # --- Weather Card ---
         MDBoxLayout:
@@ -894,55 +894,67 @@ MDScreenManager:
                         spacing: "15dp"
                         padding: [0, 0, 0, 10]
 
-<ProfileScreen>
+<ProfileScreen>:
     name: "profile"
     MDBoxLayout:
         orientation: "vertical"
-        md_bg_color: 1, 1, 1, 1 # White background
+        padding: dp(20)
+        spacing: dp(20)
+        md_bg_color: 1, 1, 1, 1
 
-        # --- HEADER ---
+        # --- TOP: Back Button ---
         MDBoxLayout:
             size_hint_y: None
-            height: dp(80)
-            padding: [dp(20), dp(10), dp(20), dp(10)] # Left, Top, Right, Bottom
-            spacing: dp(10)
-            md_bg_color: 1, 1, 1, 1
-            elevation: 0 
+            height: dp(30)
+            MDIconButton:
+                icon: "chevron-left"
+                pos_hint: {"left": 1, "center_y": 0.5}
+                theme_icon_color: "Custom"
+                icon_color: 0, 0, 0, 1
+                md_bg_color: 0.95, 0.95, 0.95, 1
+                size_hint: None, None
+                size: dp(30), dp(30)
+                line_color: 0, 0, 0, 0
+                on_release: root.manager.current = "dashboard"
 
-            # --- Avatar ---
+        # --- HEADER: Avatar ---
+        MDBoxLayout:
+            orientation: "vertical"
+            size_hint_y: None
+            height: dp(100)
+            spacing: dp(5)
+
             MDCard:
                 size_hint: None, None
-                size: dp(50), dp(50)
-                radius: [25, ] # Make it a perfect circle (half of size)
+                size: dp(70), dp(70)
+                radius: [35,] 
+                pos_hint: {"center_x": 0.5}
                 elevation: 0
-                pos_hint: {"center_y": 0.5}
-                
-                # FitImage handles circular cropping better than Image
                 FitImage:
                     id: profile_image
-                    source: 'assets/user_avatar.png' 
-                    radius: [25, ] 
+                    source: "assets/user_avatar.png"
+                    radius: [35,]
 
-            # --- Greeting Text ---
+            MDLabel:
+                id: user_name
+                text: "Loading..."
+                halign: "center"
+                bold: True
+                font_style: "Subtitle1"
+
+        # --- MIDDLE: Scrollable Container (Python fills this) ---
+        MDScrollView:
+            do_scroll_x: False
+            
             MDBoxLayout:
+                id: preferences_container  # <--- IMPORTANT ID
                 orientation: "vertical"
                 adaptive_height: True
-                adaptive_width: True
-                pos_hint: {"center_y": 0.5}
 
-                MDLabel:
-                    text: "Welcome back,"
-                    font_style: "Caption"
-                    theme_text_color: "Secondary"
-                    adaptive_height: True
-                    adaptive_width: True
-
-                MDLabel:
-                    id: user_name
-                    text: "" # Placeholder text
-                    bold: True
-                    font_size: "16sp"
-                    size_hint_x: 1
-                    theme_text_color: "Primary"
-                    adaptive_height: True
-                    adaptive_width: True
+        # --- BOTTOM: Save Button ---
+        MDRaisedButton:
+            text: "Save Changes"
+            pos_hint: {"center_x": 0.5}
+            size_hint_x: 1
+            height: dp(50)
+            on_release: root.save_and_exit()

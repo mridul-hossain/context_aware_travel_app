@@ -32,6 +32,25 @@ DB_PATH = Path(__file__).parent / "database" / "travel_companion.db"
 SELECTED_ATTRACTIONS = []
 SELECTED_ACTIVITIES = []
 SELECTED_CUISINES = []
+SELECTED_ALL_PREFERENCES = []
+
+ALL_CUISINES = [
+    "Indian", "Chinese", "Japanese", "Korean", "Thai", "Italian", 
+    "French", "Mexican", "Middle Eastern", "Vietnamese", 
+    "American", "Local / Traditional", "African"
+]
+
+ALL_ACTIVITIES = [
+    "Hiking", "Cycling", "Kayaking", "Boating", "Camping", 
+    "Fishing", "Yoga", "Ziplining", "Gym Workout", "Swimming", 
+    "Bowling", "Escape Rooms", "VR Gaming", "Spa & Wellness", 
+    "Skiing / Snowboarding"
+]
+
+ALL_ATTRACTIONS = [
+    "Beach", "Mountain", "Museum", "Art Gallery", "Waterfall", 
+    "Park", "Lake", "Riverside", "Historical Monument"
+]
 
 class run_query():
     def update_preference(attraction_preference, activity_preference, cuisine_preference, email):
@@ -164,9 +183,12 @@ class LoginScreen(MDScreen):
     def on_login_success(self, user_info):
         # This runs on the MAIN UI THREAD (Safe for UI updates, Ex: Picture)
         dashboard = self.manager.get_screen("dashboard")
+        profile = self.manager.get_screen("profile")
 
         dashboard.ids.user_name.text = user_info['name']
         dashboard.ids.profile_image.source = user_info['picture']
+        profile.ids.user_name.text = user_info['name']
+        profile.ids.profile_image.source = user_info['picture']
         
         # Configuring login button based on successful login attempt 
         self.ids.status_label.text = ""
@@ -451,6 +473,108 @@ class DashboardScreen(MDScreen):
         populate_list(restaurants, self.ids.restaurant_list)
         populate_list(attractions, self.ids.attraction_list)
         populate_list(activities, self.ids.activity_list)
+
+class ProfileScreen(MDScreen):
+    # Store the lists as class attributes so we can access them in 'save_and_exit'
+    current_cuisine_list = []
+    current_activity_list = []
+    current_attraction_list = []
+
+    def on_enter(self):
+        # 1. Get the App instance to access email/name
+        app = MDApp.get_running_app()
+        
+        # 2. Update Header Info
+        self.ids.user_name.text = app.current_user_name or "Guest"
+        if hasattr(app, 'current_user_pic') and app.current_user_pic:
+            self.ids.profile_image.source = app.current_user_pic
+
+        # 3. Load FRESH data from Database into our instance variables
+        # We use 'list()' to ensure we create a mutable copy of the data
+        self.current_cuisine_list = list(run_query.get_user_cuisine_preferences(app.current_user_email))
+        self.current_activity_list = list(run_query.get_user_activity_preferences(app.current_user_email))
+        self.current_attraction_list = list(run_query.get_user_attraction_preferences(app.current_user_email))
+
+        # 4. Generate the Buttons
+        self.populate_preferences()
+
+    def populate_preferences(self):
+        container = self.ids.preferences_container
+        container.clear_widgets() # Clear previous buttons
+
+        # Helper to create a section
+        def add_section(title, all_options, selected_options_list):
+            # A. Section Title
+            container.add_widget(
+                MDLabel(
+                    text=title, 
+                    bold=True, 
+                    font_style="Subtitle1", 
+                    size_hint_y=None, 
+                    height=dp(40)
+                )
+            )
+            
+            # B. Grid for Buttons
+            grid = MDGridLayout(
+                cols=3, 
+                adaptive_height=True, 
+                spacing=dp(10), 
+                padding=[0, 0, 0, dp(20)]
+            )
+            
+            for option in all_options:
+                btn = SelectableFlatButton(text=option, font_size="13sp")
+                
+                # --- KEY FIX: Highlight if in DB list ---
+                # "selected_options_list" is the list from the DB we passed in
+                if option in selected_options_list:
+                    btn.is_selected = True
+                
+                # Bind click event. We pass 'selected_options_list' so we know which list to update.
+                btn.bind(on_release=lambda x, opt=option, lst=selected_options_list: self.toggle_selection(x, opt, lst))
+                
+                grid.add_widget(btn)
+            
+            container.add_widget(grid)
+
+        # --- Build Sections using our Instance Variables ---
+        add_section("Favorite Cuisines", ALL_CUISINES, self.current_cuisine_list)
+        add_section("Preferred Activities", ALL_ACTIVITIES, self.current_activity_list)
+        add_section("Top Attractions", ALL_ATTRACTIONS, self.current_attraction_list)
+
+    def toggle_selection(self, btn_instance, option_text, target_list):
+        # Update the specific list (Cuisine, Activity, or Attraction) directly
+        if btn_instance.is_selected:
+            if option_text not in target_list:
+                target_list.append(option_text)
+        else:
+            if option_text in target_list:
+                target_list.remove(option_text)
+        
+        # Debug print to see changes in real-time
+        print(f"Modified List: {target_list}")
+
+    def save_and_exit(self):
+        app = MDApp.get_running_app()
+
+        # 1. Convert the lists (which we modified in toggle_selection) back to strings
+        attraction_str = ", ".join(self.current_attraction_list)
+        activity_str = ", ".join(self.current_activity_list)
+        cuisine_str = ", ".join(self.current_cuisine_list)
+
+        # 2. Save to Database
+        run_query.update_preference(
+            attraction_str, 
+            activity_str, 
+            cuisine_str, 
+            app.current_user_email
+        )
+        
+        print("Preferences Saved Successfully!")
+
+        # 3. Go back to Dashboard
+        self.manager.current = "dashboard"
 
 class TravelApp(MDApp):
     current_user_email = None
