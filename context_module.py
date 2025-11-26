@@ -1,6 +1,10 @@
 import requests
+import os
+from dotenv import load_dotenv
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut, GeocoderUnavailable
+
+load_dotenv()
 
 def get_location():
     try:
@@ -22,7 +26,7 @@ def get_location():
         return (45.5017, -73.5673, "Montreal, QC, Canada (Offline)")
 
 def get_weather(lat, lon):
-    API_KEY = "837192b3a612078fff67ddba758e61ec"
+    API_KEY = os.getenv("OPENWEATHER_API_KEY")
     try:
         url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&units=metric&appid={API_KEY}"
         response = requests.get(url, timeout=5) # Good practice to timeout here too
@@ -44,7 +48,7 @@ def get_google_places(lat, lon, place_type="restaurant", keyword=None):
     Fetches places from Google Places API.
     place_type examples: 'restaurant', 'tourist_attraction', 'museum'
     """
-    GOOGLE_API_KEY = "AIzaSyA66E6be5wsR3bz5dyliIXHNoZx4DP1W3c" 
+    GOOGLE_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")
     
     url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
     
